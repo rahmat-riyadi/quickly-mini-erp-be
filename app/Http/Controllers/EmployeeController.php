@@ -15,14 +15,7 @@ class EmployeeController extends Controller
     public function store(Request $request){
 
         try {
-
-            // if(isset($request->image)){
-            //     $image = $request->file('image')->store('image/employee');
-            //     $data = Employee::create([...$request->all(), 'image' => $image]);
-            // } else {
-            // }
             $data = Employee::create([...$request->all(), 'image' => null]);
-
             $message = 'create data success';
             $status = true;
             $code = 200;

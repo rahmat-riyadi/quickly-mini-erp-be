@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\CounterController;
@@ -159,5 +160,21 @@ Route::middleware('auth:sanctum')->group(function(){
         });
     });
 
+    Route::group(['prefix' => 'attendance'], function(){
+        Route::controller(AttendanceController::class)->group(function(){
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+            Route::post('/login', 'login');
+            Route::put('/{attendance}', 'update');
+            Route::delete('/{attendance}', 'destroy');
+        });
+    });
+    
 
+});
+
+Route::group(['prefix' => 'attendance'], function(){
+    Route::controller(AttendanceController::class)->group(function(){
+        Route::post('/login', 'login');
+    });
 });

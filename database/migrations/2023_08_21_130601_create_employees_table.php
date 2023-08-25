@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('entry_date');
             $table->string('image')->nullable();
             $table->string('base_salary')->nullable();
+            $table->string('username')->nullable();
+            $table->string('password')->nullable();
             $table->timestamps();
         });
     }

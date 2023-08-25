@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\Cashier;
 use App\Models\Counter;
 use App\Models\CounterSaleItem;
+use App\Models\Employee;
 use App\Models\Invoice;
 use App\Models\SalesItem;
 use App\Models\SalesItemGroup;
@@ -130,5 +131,8 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('qazwsx'),
             'role' => 'operasional'
         ]);
+
+        Employee::factory(10)->create();
+
     }
 }

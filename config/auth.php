@@ -1,5 +1,8 @@
 <?php
 
+use App\Models\Employee;
+use Illuminate\Support\Facades\App;
+
 return [
 
     /*
@@ -45,6 +48,11 @@ return [
             'driver' => 'session',
             'provider' => 'cashier',
         ],
+
+        'employee' => [
+            'driver' => 'session',
+            'provider' => 'employees',
+        ],
     ],
 
     /*
@@ -74,6 +82,12 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Cashier::class,
         ],
+
+        'employees' => [
+            'driver' => 'eloquent',
+            'model' => Employee::class
+        ]
+        
 
         // 'users' => [
         //     'driver' => 'database',
