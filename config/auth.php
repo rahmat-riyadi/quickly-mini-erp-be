@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Employee;
+use App\Models\Cashier;
 use Illuminate\Support\Facades\App;
 
 return [
@@ -80,7 +81,7 @@ return [
 
         'cashier' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Cashier::class,
+            'model' => Cashier::class,
         ],
 
         'employees' => [
