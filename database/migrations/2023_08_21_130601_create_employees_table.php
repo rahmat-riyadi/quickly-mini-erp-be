@@ -13,17 +13,25 @@ return new class extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('position_id');
+            $table->foreign('position_id')->references('id')->on('positions');
             $table->string('name');
             $table->string('nik');
             $table->string('kk');
             $table->string('address');
             $table->string('date_of_birth');
             $table->string('place_of_birth');
-            $table->string('entry_date');
+            $table->string('city')->nullable();
+            $table->string('province')->nullable();
+            $table->string('religion')->nullable();
+            $table->string('phone');
+            $table->string('email')->nullable();
+            $table->date('entry_date');
+            $table->date('exit_date')->nullable();
             $table->string('image')->nullable();
-            $table->string('base_salary')->nullable();
             $table->string('username')->nullable();
             $table->string('password')->nullable();
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }

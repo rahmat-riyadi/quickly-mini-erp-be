@@ -10,4 +10,18 @@ class Employee extends Authenticatable
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function position(){
+        return $this->belongsTo(Position::class)->select('id', 'name');
+    }
+
+    public function salaries(){
+        return $this->hasMany(Salary::class);
+    }
+
+    public function attendance(){
+        return $this->hasMany(Attendance::class);
+    }
+
+
 }

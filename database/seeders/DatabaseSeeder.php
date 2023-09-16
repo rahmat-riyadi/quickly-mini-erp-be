@@ -9,8 +9,10 @@ use App\Models\Counter;
 use App\Models\CounterSaleItem;
 use App\Models\Employee;
 use App\Models\Invoice;
+use App\Models\Position;
 use App\Models\SalesItem;
 use App\Models\SalesItemGroup;
+use App\Models\ShiftTime;
 use App\Models\User;
 use App\Models\WarehouseItem;
 use App\Models\WarehouseItemGroup;
@@ -132,7 +134,20 @@ class DatabaseSeeder extends Seeder
             'role' => 'operasional'
         ]);
 
-        Employee::factory(10)->create();
+        Position::factory(8)->create();
+        Employee::factory(20)->create();
+
+        ShiftTime::create([
+            'name' => 'Pagi',
+            'from' => Carbon::parse('08:00'),
+            'until' => Carbon::parse('17:00')
+        ]);
+
+        ShiftTime::create([
+            'name' => 'Malam',
+            'from' => Carbon::parse('17:00'),
+            'until' => Carbon::parse('22:00')
+        ]);
 
     }
 }

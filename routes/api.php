@@ -8,13 +8,15 @@ use App\Http\Controllers\CounterSaleItemController;
 use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SalesItemController;
 use App\Http\Controllers\SalesItemGroupController;
+use App\Http\Controllers\ShiftTimeController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WarehouseItemController;
 use App\Http\Controllers\WarehouseItemGroupController;
-use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -154,20 +156,54 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::group(['prefix' => 'employee'], function(){
         Route::controller(EmployeeController::class)->group(function(){
             Route::get('/', 'index');
+            Route::get('/{employee}', 'show');
             Route::post('/', 'store');
             Route::put('/{employee}', 'update');
             Route::delete('/{employee}', 'destroy');
         });
+
     });
+
+    Route::group(['prefix' => 'salary'], function(){
+        Route::controller(SalaryController::class)->group(function(){
+            Route::get('/{employee}', 'index');
+            Route::post('/{employee}', 'store');
+            Route::put('/{position}', 'update');
+            Route::delete('/{salary}', 'destroy');
+        });
+
+        Route::controller(EmployeeController::class)->group(function(){
+            Route::get('/employee/all', 'getAllEmployeeCurrentSalary');
+            Route::get('/employee/{id}', 'getDetailAttendance');
+        });
+    });
+    
+    Route::group(['prefix' => 'position'], function(){
+        Route::controller(PositionController::class)->group(function(){
+            Route::get('/', 'index');
+            Route::post('/', 'store');
+            Route::put('/{position}', 'update');
+            Route::delete('/{position}', 'destroy');
+        });
+
+    });
+
+    
 
     Route::group(['prefix' => 'attendance'], function(){
         Route::controller(AttendanceController::class)->group(function(){
             Route::get('/', 'index');
-            Route::post('/', 'store');
-            Route::post('/login', 'login');
             Route::put('/{attendance}', 'update');
             Route::delete('/{attendance}', 'destroy');
         });
+
+        Route::controller(EmployeeController::class)->group(function(){
+            Route::get('/employee/today', 'getEmployeeTodayAttendance');
+            Route::get('/employee/today/{id}', 'getDetailAttendance');
+        });
+
+
+
     });
     
 
@@ -175,6 +211,18 @@ Route::middleware('auth:sanctum')->group(function(){
 
 Route::group(['prefix' => 'attendance'], function(){
     Route::controller(AttendanceController::class)->group(function(){
+        Route::post('/', 'store');
         Route::post('/login', 'login');
     });
 });
+
+Route::group(['prefix' => 'shiftTime'], function(){
+    Route::controller(ShiftTimeController::class)->group(function(){
+        Route::get('/', 'index');
+        Route::post('/', 'store');
+        Route::put('/{shiftTime}', 'update');
+        Route::delete('/{shiftTime}', 'destroy');
+    });
+});
+
+Route::put('/mobile/employee/{employee}', [EmployeeController::class, 'updateEmployeeFromMobile']);

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Position;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,6 +20,7 @@ class EmployeeFactory extends Factory
     {
         return [
             'name' => fake()->name,
+            'position_id' => Position::inRandomOrder()->first('id')->id,
             'nik' => '-',
             'kk' => '-',
             'address' => fake()->address,
@@ -27,6 +29,8 @@ class EmployeeFactory extends Factory
             'entry_date' => Carbon::now(),
             'username' => fake()->userName,
             'password' => bcrypt('qazwsx'),
+            'phone' => fake()->phoneNumber,
+            'status' => fake()->randomElement([true, false])
         ];
     }
 }

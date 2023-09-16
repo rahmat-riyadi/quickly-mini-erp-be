@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Employee;
-use Illuminate\Support\Facades\App;
+// use Illuminate\Support\Facades\App;
 
 return [
 
@@ -85,7 +85,7 @@ return [
 
         'employees' => [
             'driver' => 'eloquent',
-            'model' => Employee::class
+            'model' => App\Models\Employee::class
         ]
         
 
