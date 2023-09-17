@@ -174,7 +174,7 @@ Route::middleware('auth:sanctum')->group(function(){
 
         Route::controller(EmployeeController::class)->group(function(){
             Route::get('/employee/all', 'getAllEmployeeCurrentSalary');
-            Route::get('/employee/{id}', 'getDetailAttendance');
+            Route::get('/employee/{employee}', 'getEmployeeDetailCurrentSalary');
         });
     });
     

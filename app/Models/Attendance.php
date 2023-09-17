@@ -11,4 +11,8 @@ class Attendance extends Model
 
     protected $guarded = ['id'];
 
+    public function shift(){
+        return $this->belongsTo(ShiftTime::class, 'shift_time_id', 'id');
+    }
+
 }

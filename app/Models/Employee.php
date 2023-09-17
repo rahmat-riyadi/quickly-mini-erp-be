@@ -23,5 +23,4 @@ class Employee extends Authenticatable
         return $this->hasMany(Attendance::class);
     }
 
-
 }

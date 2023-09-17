@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Attendance\CurrentMonthAttendanceResource;
+use App\Models\Attendance;
 use App\Models\Employee;
+use App\Models\MonthlySalary;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -172,6 +175,46 @@ class EmployeeController extends Controller
             $status = false;
         }
         return ResponseController::create($employee, $status, $message, $code);
+    }
+
+    public function getEmployeeDetailCurrentSalary(Employee $employee){
+
+        $currentAttendances = Attendance::with('shift')
+                                        ->where('employee_id', $employee->id)
+                                        ->whereMonth('created_at', Carbon::now())
+                                        ->get();
+        
+        $totalSalary = MonthlySalary::where('employee_id', $employee->id)
+                    ->whereMonth('created_at', Carbon::now())
+                    ->first([
+                        'salary_deduction',
+                        'overtime_pay',
+                        'total_salary',
+                    ]);
+
+        $data = Employee::with('position')
+        ->leftJoin('salaries', function($join){
+            $join->on('employees.id', '=', 'salaries.employee_id')
+            ->latest()
+            ->limit(1);
+        })
+        ->where('status', true)
+        ->where('employees.id', $employee->id)
+        ->first([
+            'employees.id',
+            'employees.name', 
+            'employees.position_id', 
+            'salaries.base_salary',
+            'salaries.time_off',
+            'attendance_intensive'
+        ]);
+
+        return ResponseController::create([
+            'employee' => $data,
+            'attendance_list' => CurrentMonthAttendanceResource::collection($currentAttendances),
+            'total_salary' => $totalSalary
+        ], true, 'get employee detail salary', 200);
+        
     }
 
 
