@@ -134,7 +134,7 @@ class EmployeeController extends Controller
         $diff = $attendanceTime->greaterThan($entryDate) ? $entryDate->diff($attendanceTime)->format('%H:%I:%S') : 0;
         $employee->late = $diff;
 
-        $employee->image = url("storage/$employee->image");
+        $employee->image = env('APP_URL').'/storage/'.$employee->image;
 
         return ResponseController::create($employee, true, 'get all attendance', 200);
 
