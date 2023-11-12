@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Livewire\Forms;
+
+use App\Models\{{modelName}};
+use Livewire\Attributes\Rule;
+use Livewire\Form;
+
+class {{modelName}}Form extends Form
+{
+    public ?{{modelName}} ${{modelNamePlural}};
+
+
+    public function setModel({{modelName}} ${{modelNamePlural}}){
+        $this->{{modelNamePlural}} = ${{modelNamePlural}};
+    }
+
+    public function store(){
+        {{modelName}}::create($this->all());
+    }
+
+    public function update(){
+        $this->{{modelNamePlural}}->update($this->all());
+    }
+}
