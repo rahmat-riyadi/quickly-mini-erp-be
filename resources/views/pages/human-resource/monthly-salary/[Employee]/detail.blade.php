@@ -39,26 +39,98 @@ state(['employee', 'base_salary', 'total_revenue']);
                     <table style="margin-top: 40px; width: 100%;" >
                         <thead>
                             <tr>
-                                <td colspan="2" style="font-weight: 600; font-size: 16px;" >Penghasilan</td>
-                                <td colspan="2" style="font-weight: 600; font-size: 16px;" >Potongan</td>
+                                <td colspan="2" style="font-weight: 600; font-size: 16px; width: 50%;" >Insentif</td>
+                                <td colspan="2" style="font-weight: 600; font-size: 16px; width: 50%;" >Lembur & Bonus</td>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="bg-light" style="height: 30px;" >
-                                <td>Gaji Pokok</td>
-                                <td style="text-align: end; padding-right: 10px;" >213123</td>
-                                <td>Denda Terlambat</td>
+                            <tr class="bg-light" style="height: 33px;" >
+                                <td>Kehadiran</td>
+                                <td style="text-align: end; padding-right: 10px;" >Rp 210,000</td>
+                                <td>Lembur Biasa</td>
                                 <td>213123</td>
                             </tr>
-                            <tr style="height: 30px;" >
-                                <td>Tunj Pokok</td>
-                                <td style="text-align: end; padding-right: 10px;" >213123</td>
-                                <td>Denda Terlambat</td>
+                            <tr style="height: 33px;" >
+                                <td>Transport</td>
+                                <td style="text-align: end; padding-right: 10px;" >Rp 50,000</td>
+                                <td>Lembur Tanggal Merah</td>
                                 <td>213123</td>
+                            </tr>
+                            <tr class="bg-light" style="height: 33px;" >
+                                <td>Split</td>
+                                <td style="text-align: end; padding-right: 10px;" >Rp 150,000</td>
+                                <td>Lembur Fix</td>
+                                <td>213123</td>
+                            </tr>
+                            <tr style="height: 33px;" >
+                                <td></td>
+                                <td style="text-align: end; padding-right: 10px;" ></td>
+                                <td>Bonus</td>
+                                <td>213123</td>
+                            </tr>
+                            <tr class="bg-light" style="height: 33px;" >
+                                <td></td>
+                                <td style="text-align: end; padding-right: 10px;" ></td>
+                                <td>THR</td>
+                                <td>213123</td>
+                            </tr>
+                            <tr style="height: 33px;" >
+                                <td><b>Total</b></td>
+                                <td style="text-align: end; padding-right: 10px;" ><b>Rp 200,000</b></td>
+                                <td><b>Total</b></td>
+                                <td ><b>Rp 200,000</b></td>
+                            </tr>
+                            <tr style="height: 10px;" >
+                                <td colspan="4" ></td>
+                            </tr>
+                            <tr style="height: 33px;" >
+                                <td colspan="2" style="font-weight: 600; font-size: 16px;" >Potongan</td>
+                                <td colspan="2" ></td>
+                            </tr>
+                            <tr class="bg-light" style="height: 33px;" >
+                                <td>Terlambat</td>
+                                <td style="text-align: end; padding-right: 10px;" >213123</td>
+                                <td colspan="2" ></td>
+                            </tr>
+                            <tr style="height: 33px;" >
+                                <td>Denda</td>
+                                <td style="text-align: end; padding-right: 10px;" >213123</td>
+                                <td colspan="2" ></td>
+                            </tr>
+                            <tr class="bg-light" style="height: 33px;" >
+                                <td>Absen</td>
+                                <td style="text-align: end; padding-right: 10px;" >213123</td>
+                                <td colspan="2" ></td>
+                            </tr>
+                            <tr style="height: 33px;" >
+                                <td colspan="2" ></td>
+                                <td ><b>Gaji</b> Pokok</td>
+                                <td><b>2,000,000</b></td>
+                            </tr>
+                            <tr style="height: 33px;" >
+                                <td colspan="2" ></td>
+                                <td ><b>Gaji</b> Bersih</td>
+                                <td><b>2,000,000</b></td>
                             </tr>
                         </tbody>
                         <tr>
                             <td></td>
+                        </tr>
+                    </table>
+                    <table style="margin-top: 120px; width: 100%;" >
+                        <tr>
+                            <td style="padding: 0 20px;" >
+                                <div style="border-bottom: 1px solid black;" ></div>
+                                <p class="m-0" >Personalia</p>
+                            </td>
+                            <td style="padding: 0 20px;" >
+                                <div style="border-bottom: 1px solid black;" ></div>
+                                <p class="m-0" >Penerima</p>
+                            </td>
+                            <td style="padding: 0 20px;" >
+                                <div style="border-bottom: 1px solid black;" ></div>
+                                <p class="m-0" >Pembukan</p>
+                            </td>
                         </tr>
                     </table>
                 </div>

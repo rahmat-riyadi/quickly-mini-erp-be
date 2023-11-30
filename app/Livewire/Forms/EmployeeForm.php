@@ -59,7 +59,7 @@ class EmployeeForm extends Form
     public $username;
 
     #[Rule('nullable')]
-    public $password;
+    public $newPassword;
 
     #[Rule('required')]
     public $status;
@@ -67,22 +67,6 @@ class EmployeeForm extends Form
     public function setModel(Employee $employee){
         $this->employee = $employee;
         $this->fill($employee);
-        // $this->name = $employee->name;
-        // $this->nik = $employee->nik;
-        // $this->kk = $employee->kk;
-        // $this->address = $employee->address;
-        // $this->date_of_birth = $employee->date_of_birth;
-        // $this->place_of_birth = $employee->place_of_birth;
-        // $this->city = $employee->city;
-        // $this->province = $employee->province;
-        // $this->religion = $employee->religion;
-        // $this->phone = $employee->phone;
-        // $this->email = $employee->email;
-        // $this->entry_date = $employee->entry_date;
-        // $this->exit_date = $employee->exit_date;
-        // $this->image = $employee->image;
-        // $this->username = $employee->username;
-        // $this->status = $employee->status;
     }
 
     public function store(){
@@ -97,6 +81,13 @@ class EmployeeForm extends Form
     }
 
     public function update(){
+
+        $data = $this->all();
+
+        if(isset($this->newPassword)){
+            $data['password'] = bcrypt($this->newPassword);
+        }
+
         $this->employee->update($this->all());
     }
 }

@@ -4,12 +4,31 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\MonthlySalaryController;
+use App\Http\Resources\Attendance\CurrentStatusResource;
 use App\Models\ShiftTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
 {
+
+
+    public function changeStatus(Request $request, $status){
+
+        $user = $request->user()->attendance()
+                ->latest()
+                ->whereDate('created_at', Carbon::now())
+                ->first();
+            
+        return $this->response(
+            status: 200,
+            success: false,
+            message: 'heeh',
+            data: $user
+        );
+
+    }
+
     public function store(Request $request){
 
         $employee = $request->user();
@@ -26,7 +45,7 @@ class AttendanceController extends Controller
         
         try {
             
-            $employee->attendance()->create([
+            $data = $employee->attendance()->create([
                 'image' => $data['image'],
                 'attendance_time' => Carbon::now(),
                 'location' => $data['location'],
@@ -50,12 +69,12 @@ class AttendanceController extends Controller
             $status = false;
         }
 
-
-        return response()->json([
-            'success' => $status,
-            'message' => $message,
-            'data' => null
-        ], $code);
+        return $this->response(
+            status: $code,
+            success: $status,
+            message: $message,
+            data: is_null($data) ? null : new CurrentStatusResource($data)
+        );
 
     }
 }

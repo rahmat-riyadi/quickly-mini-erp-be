@@ -21,10 +21,10 @@ $submit = function (){
     try {
         $this->form->update();
         session()->flash('success', 'Data berhasil diubah');
-        $this->redirect('/');
+        $this->redirect('/human-resource/employee');
     } catch (\Throwable $th) {
         session()->flash('error', $th->getMessage());
-        $this->redirect('/');
+        $this->redirect('/human-resource/employee');
     }
 };
 
@@ -281,8 +281,8 @@ $submit = function (){
                             </div>
                             <div class="form-group">
                                 <label>Kata Sandi :</label>
-                                <input type="text" wire:model="form.password" class="form-control @error('form.password') is-invalid @enderror" placeholder="Masukan Jabatan"/>
-                                @error('form.password')
+                                <input type="text" wire:model="form.newPass" class="form-control @error('form.newPass') is-invalid @enderror" placeholder="Masukan Jabatan"/>
+                                @error('form.newPass')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -296,7 +296,7 @@ $submit = function (){
                         <span wire:loading >loading</span>
                         <span wire:loading.remove >Simpan</span>
                     </button>
-                    <a href="" wire:navigate class="btn btn-secondary">Kembali</a>
+                    <a href="/human-resource/employee" wire:navigate class="btn btn-secondary">Kembali</a>
                 </div>
             </div>
         </form>

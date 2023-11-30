@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Attendance extends Model
+class SaleItem extends Model
 {
     use HasFactory;
 
     protected $guarded = ['id'];
 
-    public function shift(){
-        return $this->belongsTo(ShiftTime::class, 'shift_time_id');
+    public function category(){
+        return $this->belongsTo(SaleItemGroup::class, 'sale_item_group_id');
     }
 
 }

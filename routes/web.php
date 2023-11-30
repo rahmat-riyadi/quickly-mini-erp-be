@@ -5,8 +5,12 @@ use App\Http\Controllers\CounterController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\MonthlySalaryController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\SaleItemController;
+use App\Http\Controllers\SaleItemGroupController;
 use App\Http\Controllers\ShiftTimeController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\WarehouseItemController;
+use App\Http\Controllers\WarehouseItemGroupController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,6 +31,14 @@ Route::group(['prefix' => 'master-data'], function(){
     Route::delete('/admin/delete/{admin}', [AdminController::class, 'destroy']);
     Route::post('/supplier', [SupplierController::class, 'index'])->name('supplier.post');
     Route::delete('/supplier/delete/{supplier}', [SupplierController::class, 'destroy']);
+    Route::post('/warehouse-item-group', [WarehouseItemGroupController::class, 'index'])->name('warehouseItemGroup.post');
+    Route::delete('/warehouse-item-group/delete/{warehouseItemGroup}', [WarehouseItemGroupController::class, 'destroy']);
+    Route::post('/warehouse-item', [WarehouseItemController::class, 'index'])->name('warehouseItem.post');
+    Route::delete('/warehouse-item/delete/{warehouseItem}', [WarehouseItemController::class, 'destroy']);
+    Route::post('/sale-item-group', [SaleItemGroupController::class, 'index'])->name('saleItemGroup.post');
+    Route::delete('/sale-item-group/delete/{saleItemGroup}', [SaleItemGroupController::class, 'destroy']);
+    Route::post('/sale-item', [SaleItemController::class, 'index'])->name('saleItem.post');
+    Route::delete('/sale-item/delete/{saleItem}', [SaleItemController::class, 'destroy']);
 });
 
 
@@ -44,10 +56,3 @@ Route::group(['prefix' => 'human-resource'], function(){
     Route::post('/monthly-salary', [MonthlySalaryController::class, 'index'])->name('monthlySalary.post');
     Route::delete('/monthly-salary/delete/{monthlySalary}', [MonthlySalaryController::class, 'destroy']);
 });
-
-        
-
-
-
-
-        

@@ -28,6 +28,12 @@ class EmployeeController extends Controller
 
         }
 
+        return response()->json([
+            'success' => false,
+            'message' => 'unauthorized',
+            'data' => null
+        ], 401);
+
     }
 
     public function updateProfile(Request $request){

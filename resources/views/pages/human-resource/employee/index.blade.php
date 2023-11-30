@@ -17,14 +17,6 @@ name('human-resource.employee.index');
                     <h3 class="card-label">Daftar Employee</h3>
                 </div>
                 <div class="card-toolbar">
-                    <!--begin::Dropdown-->
-                    <div class="input-icon mr-5">
-                        <input type="text" class="form-control" placeholder="Search..." id="kt_datatable_search_query" />
-                        <span>
-                            <i class="flaticon2-search-1 text-muted"></i>
-                        </span>
-                    </div>
-                    <!--end::Dropdown-->
                     <!--begin::Button-->
                     <a href="/human-resource/employee/form" wire:navigate class="btn btn-primary font-weight-bolder">
                     <span class="svg-icon svg-icon-md">
@@ -63,6 +55,32 @@ name('human-resource.employee.index');
                     </div>
                 </div>
                 @endif
+                <div class="row mb-5">
+                    <div class="col">
+                        <select class="custom-select form-control">
+                            <option>Cari Berdasarkan Jabatan...</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select class="custom-select form-control">
+                            <option>Cari Berdasarkan Status...</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <div class="input-icon ">
+                            <input type="text" class="form-control" placeholder="Search..." id="kt_datatable_search_query" />
+                            <span>
+                                <i class="flaticon2-search-1 text-muted"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
                 <div class="datatable datatable-bordered datatable-head-custom" id="kt_datatable"></div>
                 <!--end: Datatable-->
             </div>
@@ -107,7 +125,7 @@ name('human-resource.employee.index');
 
                 // layout definition
                 layout: {
-                    scroll: false,
+                    scroll: true,
                     footer: false,
                 },
 

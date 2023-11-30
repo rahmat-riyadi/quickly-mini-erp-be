@@ -20,6 +20,7 @@ return new class extends Migration
             $table->foreign('shift_time_id')->on('shift_times')->references('id');
             $table->string('status')->nullable();
             $table->time('attendance_time');
+            $table->time('attendance_time_out')->nullable();
             $table->boolean('is_late');
             $table->string('description');
             $table->string('location');

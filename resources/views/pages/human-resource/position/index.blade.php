@@ -10,7 +10,6 @@ name('human-resource.position.index');
 <x-layouts.app subheaderTitle="Position" >
     @volt
     <div class="container">
-
         <div class="card card-custom">
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
                 <div class="card-title">
@@ -73,14 +72,6 @@ name('human-resource.position.index');
     
         <script>
 
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-
             var datatable = $('#kt_datatable').KTDatatable({
                 // datasource definition
                 data: {
@@ -89,6 +80,9 @@ name('human-resource.position.index');
                         read: {
                             url: "{{ route('position.post') }}",
                             method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
                             map: function(raw) {
                                 // sample data mapping
                                 var dataSet = raw;
