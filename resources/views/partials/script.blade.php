@@ -83,6 +83,7 @@ const deleteData = (e, callback) => {
 
     KTLayoutAsideMenu.init('kt_aside_menu_master_data');
     KTLayoutAsideMenu.init('kt_aside_menu_human_resource');
+    KTLayoutAsideMenu.init('kt_aside_menu_operational');
 
 </script>
 

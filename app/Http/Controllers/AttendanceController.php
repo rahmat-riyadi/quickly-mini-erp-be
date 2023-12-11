@@ -44,6 +44,7 @@ class AttendanceController extends Controller
                 DB::raw("CONCAT('$url/storage/', attendances.image) as image"), 
                 'attendances.location', 
                 'attendances.attendance_time', 
+                'attendances.attendance_time_out', 
                 'attendances.status', 
                 'attendances.description', 
                 'shift_times.name as shift', 

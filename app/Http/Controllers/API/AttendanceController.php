@@ -15,16 +15,53 @@ class AttendanceController extends Controller
 
     public function changeStatus(Request $request, $status){
 
-        $user = $request->user()->attendance()
+        if($status == 'work'){
+            $status = "Sedang Bekerja";
+        } else {
+            $status = ucfirst($status);
+        }
+
+        try {
+
+            $attendance = $request->user()->attendance()
+                    ->latest()
+                    ->whereNull('attendance_time_out')
+                    ->first();
+
+            $attendance->update(['status' => $status]);
+                
+            return $this->response(
+                status: 200,
+                success: true,
+                message: 'Status berhasil diubah',
+                data: new CurrentStatusResource($attendance) 
+            );
+
+        } catch (\Throwable $th) {
+            return $this->response(
+                status: 200,
+                success: false,
+                message: $th->getMessage(),
+                data: null
+            );
+        }
+
+
+
+    }
+
+    public function getCurrentStatus(Request $request){
+        
+        $attendance = $request->user()->attendance()
                 ->latest()
-                ->whereDate('created_at', Carbon::now())
+                ->whereNull('attendance_time_out')
                 ->first();
             
         return $this->response(
             status: 200,
-            success: false,
-            message: 'heeh',
-            data: $user
+            success: $attendance ? true : false,
+            message: 'get current status success',
+            data: $attendance ? new CurrentStatusResource($attendance) : null
         );
 
     }
@@ -77,4 +114,25 @@ class AttendanceController extends Controller
         );
 
     }
+
+    public function timeOut(Request $request){
+
+        $request->user()->attendance()
+        ->latest()
+        ->whereNull('attendance_time_out')
+        ->first()
+        ->update([
+            'attendance_time_out' => Carbon::now()
+        ]);
+
+        return $this->response(
+            status: 200,
+            success: true,
+            message: 'status berhasil diubah',
+            data: null
+        );
+
+    }
+
+
 }

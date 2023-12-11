@@ -56,3 +56,10 @@ Route::group(['prefix' => 'human-resource'], function(){
     Route::post('/monthly-salary', [MonthlySalaryController::class, 'index'])->name('monthlySalary.post');
     Route::delete('/monthly-salary/delete/{monthlySalary}', [MonthlySalaryController::class, 'destroy']);
 });
+
+Route::group(['prefix' => 'operational'], function(){
+    Route::post('/delivery-order', [DeliveryOrderController::class, 'index'])->name('deliveryOrder.post');
+    Route::delete('/delivery-order/delete/{deliveryOrder}', [DeliveryOrderController::class, 'destroy']);
+});
+
+        

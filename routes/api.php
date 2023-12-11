@@ -23,6 +23,8 @@ Route::middleware('auth:sanctum')->group(function(){
         Route::controller(AttendanceController::class)->group(function(){
             Route::post('/store', 'store');
             Route::get('/changeStatus/{status}', 'changeStatus');
+            Route::get('/status', 'getCurrentStatus');
+            Route::get('/timeOut', 'timeOut');
         });
     });
 

@@ -53,7 +53,7 @@ class MonthlySalaryController extends Controller
                         ->where('employee_id', $employee->id)
                         ->first();
 
-        if($record){
+        if($record !== null){
             $record->update([
                 'salary_deduction' => $salaryDeduction,
                 'overtime_pay' => 0,
