@@ -21,8 +21,7 @@ return new class extends Migration
             $table->date('order_date');
             $table->time('order_time');
             $table->string('delivery_type')->nullable();
-            $table->string('items_type');
-            $table->string('status')->default('pending');
+            $table->enum('status', ['Menunggu', 'Diterima', 'Selesai', 'Ditolak']);
             $table->timestamps();
         });
     }

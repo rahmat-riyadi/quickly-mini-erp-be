@@ -11,4 +11,12 @@ class DeliveryOrder extends Model
 
     protected $guarded = ['id'];
 
+    public function items(){
+        return $this->hasMany(DeliveryOrderItem::class, 'do_id');
+    }
+
+    public function counter(){
+        return $this->belongsTo(Counter::class, 'counter_id');
+    }
+
 }

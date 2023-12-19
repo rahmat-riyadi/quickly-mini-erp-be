@@ -138,7 +138,7 @@ name('master-data.admin.index');
                     autoHide: false,
                     template: function(e) {
                         return `\
-                        <a href="/${e.id}" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">\
+                        <a href="/master-data/admin/${e.id}" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">\
                             <span class="svg-icon svg-icon-md svg-icon-success">\
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">\
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\
@@ -149,7 +149,7 @@ name('master-data.admin.index');
                                 </svg>\
                             </span>\
                         </a>\
-                        <a href="javascript:;" data-href="/delete/${e.id}" onclick="deleteData(this, function(){ datatable.reload() })"  class="btn btn-sm btn-light btn-icon" title="Delete">\
+                        <a href="javascript:;" data-href="/master-data/admin/delete/${e.id}" onclick="deleteData(this, function(){ datatable.reload() })"  class="btn btn-sm btn-light btn-icon" title="Delete">\
                             <span class="svg-icon svg-icon-md svg-icon-danger">\
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">\
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">\

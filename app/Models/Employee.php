@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,6 +20,10 @@ class Employee extends Authenticatable
         'updated_at',
     ];
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
     public function attendance(){
         return $this->hasMany(Attendance::class);
     }
@@ -31,8 +36,11 @@ class Employee extends Authenticatable
         return $this->hasMany(Salary::class);
     }
 
-    public function monthlySalary(){
-        return $this->hasMany(MonthlySalary::class);
+    public function currentWeekSchedule(){
+        return $this->hasMany(WorkSchedule::class)->whereBetween('date', [
+            Carbon::now()->startOfWeek(),
+            Carbon::now()->endOfWeek(),
+        ]);
     }
 
 }

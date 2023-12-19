@@ -8,11 +8,12 @@ state(['username', 'password']);
 name('login');
 
 $submit = function () {
+	
     if(Auth::attempt($this->all())){
         return redirect()->intended('/');
-    } else {
-        $this->dispatch('loginFailed');
     }
+	
+	$this->dispatch('loginFailed');
 }
 
 ?>

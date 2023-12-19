@@ -5,9 +5,11 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Admin;
+use App\Models\Counter;
 use App\Models\Employee;
 use App\Models\Position;
 use App\Models\ShiftTime;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -25,12 +27,11 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Admin::create([
-            'fullname' => 'Rahmat',
-            'username' => 'admin',
-            'password' => bcrypt('qazwsx')
-        ]);
+        $this->call(RoleSeeder::class);
+        $this->call(ItemGroupSeeder::class);
 
+        
+        Counter::factory(5)->create();
         Position::factory(8)->create();
         Employee::factory(20)->create();
 
@@ -45,6 +46,42 @@ class DatabaseSeeder extends Seeder
             'from' => Carbon::parse('17:00'),
             'until' => Carbon::parse('22:00')
         ]);
+
+        $user = User::create([
+            'username' => 'rahmat.riyadi',
+            'password' => bcrypt('qazwsx'),
+        ]);
+
+        $user->employee()->create([
+            'name' => 'Rahmat Riyadi Syam',
+            'position_id' => Position::inRandomOrder()->first('id')->id,
+            'nik' => '-',
+            'kk' => '-',
+            'address' => fake()->address,
+            'date_of_birth' => Carbon::now(),
+            'place_of_birth' => '-',
+            'entry_date' => Carbon::now(),
+            'username' => 'rahmat.riyadi',
+            'password' => bcrypt('qazwsx'),
+            'phone' => fake()->phoneNumber,
+            'status' => fake()->randomElement([true, false])
+        ]);
+
+        $user->assignRole('operational');
+        $user->assignRole('human-resource');
+
+        $user = User::create([
+            'username' => 'counter',
+            'password' => bcrypt('qazwsx'),
+        ]);
+
+        $user->counter()->create([
+            'name' => 'counter 1',
+            'code' => '01',
+            'phone' => fake()->phoneNumber
+        ]);
+
+        $user->assignRole('counter');
 
     }
 }

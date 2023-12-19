@@ -10,11 +10,23 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         @include('partials.style')
 		<link rel="shortcut icon" href="{{ asset('assets/media/logos/logo.png') }}" />
-		
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+		<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+		<script data-navigate-once >
+
+			var pusher = new Pusher('606d04687f7073f887a9', {
+				cluster: 'ap1'
+			});
+
+			const notificationSound = new Audio("{{ asset('assets/sound/notif.mp3') }}");
+
+
+		</script>		
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body id="kt_body" class="header-mobile-fixed subheader-enabled aside-enabled aside-fixed aside-secondary-enabled ">
+	<body id="kt_body" class="header-mobile-fixed subheader-enabled aside-enabled aside-fixed aside-secondary-enabled @if(Route::currentRouteName() == 'cashier') aside-minimize @endif">
 		<!--begin::Main-->
 		<!--begin::Header Mobile-->
 		<x-header-mobile/>
@@ -30,6 +42,8 @@
 					<!--begin::Content-->
 					<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 						<!--begin::Subheader-->
+						{{-- @if (Route::currentRouteName() != 'cashier')
+						@endif --}}
 						<x-subheader :$subheaderTitle />
 						<!--end::Subheader-->
 						<!--begin::Entry-->
@@ -42,7 +56,9 @@
 					</div>
 					<!--end::Content-->
 					<!--begin::Footer-->
+					@if (Route::currentRouteName() != 'cashier')
 					<x-footer/>
+					@endif
 					<!--end::Footer-->
 				</div>
 				<!--end::Wrapper-->
@@ -249,6 +265,7 @@
 			</span>
 		</div>
 		<!--end::Scrolltop-->
+		@livewireScripts
 		@include('partials.script')
 	</body>
 	<!--end::Body-->

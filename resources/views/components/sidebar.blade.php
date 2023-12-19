@@ -31,6 +31,7 @@
                     </a>
                 </li>
                 <!--end::Item-->
+                @role('counter')
                 <!--begin::Item-->
                 <li class="nav-item mb-3" data-toggle="tooltip" data-placement="right" data-container="body" data-boundary="window" title="Cashier">
                     <a href="/cashier" wire:navigate class="nav-link btn btn-icon btn-clean btn-lg @if(str_contains(Route::currentRouteName(), 'cashier')) active @endif" data-toggle="tab" data-target="#master_data" role="tab">
@@ -50,7 +51,7 @@
                 <!--end::Item-->
                 <!--begin::Item-->
                 <li class="nav-item mb-3" data-toggle="tooltip" data-placement="right" data-container="body" data-boundary="window" title="Counter">
-                    <a href="/cashier" wire:navigate class="nav-link btn btn-icon btn-clean btn-lg @if(str_contains(Route::currentRouteName(), 'cashier')) active @endif" data-toggle="tab" data-target="#master_data" role="tab">
+                    <a href="javascript:;" class="nav-link btn btn-icon btn-clean btn-lg @if(str_contains(Route::currentRouteName(), 'counter')) active @endif" data-toggle="tab" data-target="#counter" role="tab">
                         <span class="svg-icon svg-icon-xl">
                             <!--begin::Svg Icon | path:assets/media/svg/icons/Communication/Group.svg-->
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
@@ -65,6 +66,8 @@
                     </a>
                 </li>
                 <!--end::Item-->
+                @endrole
+                @unlessrole('counter')
                 <!--begin::Item-->
                 <li class="nav-item mb-3" data-toggle="tooltip" data-placement="right" data-container="body" data-boundary="window" title="HR Department">
                     <a href="/human-resource" wire:navigate class="nav-link btn btn-icon btn-clean btn-lg @if(str_contains(Route::currentRouteName(), 'human-resource')) active @endif" data-toggle="tab" data-target="#humanResource" role="tab">
@@ -119,6 +122,7 @@
                     </a>
                 </li>
                 <!--end::Item-->
+                @endunlessrole
             </ul>
             <!--end::Nav-->
         </div>
@@ -143,7 +147,11 @@
             <div class="tab-content">
                 <!--begin::Tab Pane-->
                 <div class="tab-pane p-3 px-lg-7 py-lg-5 fade @if(Route::currentRouteName() == 'home') show active @endif" id="dashboard">
-                    <h3 class="p-2 p-lg-3 my-1 my-lg-3">Hi, {{ auth()->user()->fullname  }} 👋🏻</h3>
+                    @role('counter')
+                    <h3 class="p-2 p-lg-3 my-1 my-lg-3"> {{ auth()->user()->counter->name  }}</h3>
+                    @else
+                    <h3 class="p-2 p-lg-3 my-1 my-lg-3">Hi, {{ auth()->user()->fullname ?? ''   }} 👋🏻</h3>
+                    @endrole
                     {{-- <ul class="navi navi-hover navi-active">
                         <li class="navi-item">
                             <a class="navi-link" wire:navigate href="/master-data/users">
@@ -304,6 +312,49 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'work-schedule')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
+                                    <a href="javascript:;" class="menu-link menu-toggle">
+                                        <span class="svg-icon menu-icon">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24" />
+                                                    <path d="M4,9.67471899 L10.880262,13.6470401 C10.9543486,13.689814 11.0320333,13.7207107 11.1111111,13.740321 L11.1111111,21.4444444 L4.49070127,17.526473 C4.18655139,17.3464765 4,17.0193034 4,16.6658832 L4,9.67471899 Z M20,9.56911707 L20,16.6658832 C20,17.0193034 19.8134486,17.3464765 19.5092987,17.526473 L12.8888889,21.4444444 L12.8888889,13.6728275 C12.9050191,13.6647696 12.9210067,13.6561758 12.9368301,13.6470401 L20,9.56911707 Z" fill="#000000" />
+                                                    <path d="M4.21611835,7.74669402 C4.30015839,7.64056877 4.40623188,7.55087574 4.5299008,7.48500698 L11.5299008,3.75665466 C11.8237589,3.60013944 12.1762411,3.60013944 12.4700992,3.75665466 L19.4700992,7.48500698 C19.5654307,7.53578262 19.6503066,7.60071528 19.7226939,7.67641889 L12.0479413,12.1074394 C11.9974761,12.1365754 11.9509488,12.1699127 11.9085461,12.2067543 C11.8661433,12.1699127 11.819616,12.1365754 11.7691509,12.1074394 L4.21611835,7.74669402 Z" fill="#000000" opacity="0.3" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-text">Jam Kerja</span>
+                                        <i class="menu-arrow"></i>
+                                    </a>
+                                    <div class="menu-submenu">
+                                        <i class="menu-arrow"></i>
+                                        <ul class="menu-subnav">
+                                            <li class="menu-item menu-item-parent" aria-haspopup="true">
+                                                <span class="menu-link">
+                                                    <span class="menu-text">Jam Kerja</span>
+                                                </span>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'human-resource.work-schedule.index') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/human-resource/work-schedule" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Daftar Jam Kerja</span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'human-resource.work-schedule.create') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/human-resource/work-schedule/form" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Tambah Jam Kerja</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
                                 <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'employee')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
                                     <a href="javascript:;" class="menu-link menu-toggle">
                                         <span class="svg-icon menu-icon">
@@ -425,6 +476,7 @@
                     <!--end::Aside Menu-->
                 </div>
                 <!--end::Tab Pane-->
+
                 <!--begin::Tab Pane-->
                 <div class="tab-pane fade @if(str_contains(Route::currentRouteName(), 'operational')) show active @endif" id="operational">
                     <!--begin::Aside Menu-->
@@ -467,14 +519,6 @@
                                                         <span></span>
                                                     </i>
                                                     <span class="menu-text">Daftar DO</span>
-                                                </a>
-                                            </li>
-                                            <li class="menu-item @if(Route::currentRouteName() == 'operational.delivery-order.request') menu-item-active @endif" aria-haspopup="true">
-                                                <a wire:navigate href="/operational/delivery-order/request" class="menu-link">
-                                                    <i class="menu-bullet menu-bullet-dot">
-                                                        <span></span>
-                                                    </i>
-                                                    <span class="menu-text">Daftar Permintaan DO</span>
                                                 </a>
                                             </li>
                                             <li class="menu-item @if(Route::currentRouteName() == 'operational.delivery-order.create') menu-item-active @endif" aria-haspopup="true">
@@ -531,6 +575,129 @@
                                         </ul>
                                     </div>
                                 </li>
+                            <!--end::Menu Nav-->
+                        </div>
+                        <!--end::Menu Container-->
+                    </div>
+                    <!--end::Aside Menu-->
+                </div>
+                <!--end::Tab Pane-->
+
+                <!--begin::Tab Pane-->
+                <div class="tab-pane fade @if(str_contains(Route::currentRouteName(), 'counter')) show active @endif" id="counter">
+                    <!--begin::Aside Menu-->
+                    <div class="aside-menu-wrapper flex-column-fluid px-10 py-5" id="kt_aside_menu_wrapper">
+                        <!--begin::Menu Container-->
+                        <div id="kt_aside_menu_counter" class="aside-menu" data-menu-vertical="1" data-menu-scroll="1">
+                            <!--begin::Menu Nav-->
+                            <ul class="menu-nav">
+                                <li class="menu-section">
+                                    <h4 class="menu-text">Counter</h4>
+                                    <i class="menu-icon ki ki-bold-more-hor icon-md"></i>
+                                </li>
+                                <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'shift-time')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
+                                    <a href="javascript:;" class="menu-link">
+                                        <span class="svg-icon menu-icon">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24" />
+                                                    <path d="M4,9.67471899 L10.880262,13.6470401 C10.9543486,13.689814 11.0320333,13.7207107 11.1111111,13.740321 L11.1111111,21.4444444 L4.49070127,17.526473 C4.18655139,17.3464765 4,17.0193034 4,16.6658832 L4,9.67471899 Z M20,9.56911707 L20,16.6658832 C20,17.0193034 19.8134486,17.3464765 19.5092987,17.526473 L12.8888889,21.4444444 L12.8888889,13.6728275 C12.9050191,13.6647696 12.9210067,13.6561758 12.9368301,13.6470401 L20,9.56911707 Z" fill="#000000" />
+                                                    <path d="M4.21611835,7.74669402 C4.30015839,7.64056877 4.40623188,7.55087574 4.5299008,7.48500698 L11.5299008,3.75665466 C11.8237589,3.60013944 12.1762411,3.60013944 12.4700992,3.75665466 L19.4700992,7.48500698 C19.5654307,7.53578262 19.6503066,7.60071528 19.7226939,7.67641889 L12.0479413,12.1074394 C11.9974761,12.1365754 11.9509488,12.1699127 11.9085461,12.2067543 C11.8661433,12.1699127 11.819616,12.1365754 11.7691509,12.1074394 L4.21611835,7.74669402 Z" fill="#000000" opacity="0.3" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-text">Laporan Penjualan</span>
+                                    </a>
+                                </li>
+                                <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'delivery-order')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
+                                    <a href="javascript:;" class="menu-link menu-toggle">
+                                        <span class="svg-icon menu-icon">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24" />
+                                                    <path d="M4,9.67471899 L10.880262,13.6470401 C10.9543486,13.689814 11.0320333,13.7207107 11.1111111,13.740321 L11.1111111,21.4444444 L4.49070127,17.526473 C4.18655139,17.3464765 4,17.0193034 4,16.6658832 L4,9.67471899 Z M20,9.56911707 L20,16.6658832 C20,17.0193034 19.8134486,17.3464765 19.5092987,17.526473 L12.8888889,21.4444444 L12.8888889,13.6728275 C12.9050191,13.6647696 12.9210067,13.6561758 12.9368301,13.6470401 L20,9.56911707 Z" fill="#000000" />
+                                                    <path d="M4.21611835,7.74669402 C4.30015839,7.64056877 4.40623188,7.55087574 4.5299008,7.48500698 L11.5299008,3.75665466 C11.8237589,3.60013944 12.1762411,3.60013944 12.4700992,3.75665466 L19.4700992,7.48500698 C19.5654307,7.53578262 19.6503066,7.60071528 19.7226939,7.67641889 L12.0479413,12.1074394 C11.9974761,12.1365754 11.9509488,12.1699127 11.9085461,12.2067543 C11.8661433,12.1699127 11.819616,12.1365754 11.7691509,12.1074394 L4.21611835,7.74669402 Z" fill="#000000" opacity="0.3" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-text">Delivery Order</span>
+                                        <i class="menu-arrow"></i>
+                                    </a>
+                                    <div class="menu-submenu">
+                                        <i class="menu-arrow"></i>
+                                        <ul class="menu-subnav">
+                                            <li class="menu-item menu-item-parent" aria-haspopup="true">
+                                                <span class="menu-link">
+                                                    <span class="menu-text">Delivery Order</span>
+                                                </span>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'counter.delivery-order.index') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/counter/delivery-order" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Daftar DO</span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'counter.delivery-order.create') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/counter/delivery-order/form" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Buat DO</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'inventory')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
+                                    <a href="javascript:;" class="menu-link menu-toggle">
+                                        <span class="svg-icon menu-icon">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24" />
+                                                    <path d="M4,9.67471899 L10.880262,13.6470401 C10.9543486,13.689814 11.0320333,13.7207107 11.1111111,13.740321 L11.1111111,21.4444444 L4.49070127,17.526473 C4.18655139,17.3464765 4,17.0193034 4,16.6658832 L4,9.67471899 Z M20,9.56911707 L20,16.6658832 C20,17.0193034 19.8134486,17.3464765 19.5092987,17.526473 L12.8888889,21.4444444 L12.8888889,13.6728275 C12.9050191,13.6647696 12.9210067,13.6561758 12.9368301,13.6470401 L20,9.56911707 Z" fill="#000000" />
+                                                    <path d="M4.21611835,7.74669402 C4.30015839,7.64056877 4.40623188,7.55087574 4.5299008,7.48500698 L11.5299008,3.75665466 C11.8237589,3.60013944 12.1762411,3.60013944 12.4700992,3.75665466 L19.4700992,7.48500698 C19.5654307,7.53578262 19.6503066,7.60071528 19.7226939,7.67641889 L12.0479413,12.1074394 C11.9974761,12.1365754 11.9509488,12.1699127 11.9085461,12.2067543 C11.8661433,12.1699127 11.819616,12.1365754 11.7691509,12.1074394 L4.21611835,7.74669402 Z" fill="#000000" opacity="0.3" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-text">Inventaris</span>
+                                        <i class="menu-arrow"></i>
+                                    </a>
+                                    <div class="menu-submenu">
+                                        <i class="menu-arrow"></i>
+                                        <ul class="menu-subnav">
+                                            <li class="menu-item menu-item-parent" aria-haspopup="true">
+                                                <span class="menu-link">
+                                                    <span class="menu-text">Inventaris</span>
+                                                </span>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'counter.inventory.item.index') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/counter/item" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Daftar Barang</span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'human-resource.shift-time.create') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/human-resource/shift-time/form" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Tambah Waktu Shift</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
                             <!--end::Menu Nav-->
                         </div>
                         <!--end::Menu Container-->
@@ -679,7 +846,93 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'warehouse-item-group')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
+                                <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'item-category')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
+                                    <a href="javascript:;" class="menu-link menu-toggle">
+                                        <span class="svg-icon menu-icon">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24" />
+                                                    <path d="M4,9.67471899 L10.880262,13.6470401 C10.9543486,13.689814 11.0320333,13.7207107 11.1111111,13.740321 L11.1111111,21.4444444 L4.49070127,17.526473 C4.18655139,17.3464765 4,17.0193034 4,16.6658832 L4,9.67471899 Z M20,9.56911707 L20,16.6658832 C20,17.0193034 19.8134486,17.3464765 19.5092987,17.526473 L12.8888889,21.4444444 L12.8888889,13.6728275 C12.9050191,13.6647696 12.9210067,13.6561758 12.9368301,13.6470401 L20,9.56911707 Z" fill="#000000" />
+                                                    <path d="M4.21611835,7.74669402 C4.30015839,7.64056877 4.40623188,7.55087574 4.5299008,7.48500698 L11.5299008,3.75665466 C11.8237589,3.60013944 12.1762411,3.60013944 12.4700992,3.75665466 L19.4700992,7.48500698 C19.5654307,7.53578262 19.6503066,7.60071528 19.7226939,7.67641889 L12.0479413,12.1074394 C11.9974761,12.1365754 11.9509488,12.1699127 11.9085461,12.2067543 C11.8661433,12.1699127 11.819616,12.1365754 11.7691509,12.1074394 L4.21611835,7.74669402 Z" fill="#000000" opacity="0.3" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-text">Kategori Barang</span>
+                                        <i class="menu-arrow"></i>
+                                    </a>
+                                    <div class="menu-submenu">
+                                        <i class="menu-arrow"></i>
+                                        <ul class="menu-subnav">
+                                            <li class="menu-item menu-item-parent" aria-haspopup="true">
+                                                <span class="menu-link">
+                                                    <span class="menu-text">Kategori Barang </span>
+                                                </span>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'master-data.item-category.index') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/master-data/item-category" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Daftar Kategori</span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'master-data.item-category.create') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/master-data/item-category/form" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Tambah Kategori</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'item.')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
+                                    <a href="javascript:;" class="menu-link menu-toggle">
+                                        <span class="svg-icon menu-icon">
+                                            <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <rect x="0" y="0" width="24" height="24" />
+                                                    <path d="M4,9.67471899 L10.880262,13.6470401 C10.9543486,13.689814 11.0320333,13.7207107 11.1111111,13.740321 L11.1111111,21.4444444 L4.49070127,17.526473 C4.18655139,17.3464765 4,17.0193034 4,16.6658832 L4,9.67471899 Z M20,9.56911707 L20,16.6658832 C20,17.0193034 19.8134486,17.3464765 19.5092987,17.526473 L12.8888889,21.4444444 L12.8888889,13.6728275 C12.9050191,13.6647696 12.9210067,13.6561758 12.9368301,13.6470401 L20,9.56911707 Z" fill="#000000" />
+                                                    <path d="M4.21611835,7.74669402 C4.30015839,7.64056877 4.40623188,7.55087574 4.5299008,7.48500698 L11.5299008,3.75665466 C11.8237589,3.60013944 12.1762411,3.60013944 12.4700992,3.75665466 L19.4700992,7.48500698 C19.5654307,7.53578262 19.6503066,7.60071528 19.7226939,7.67641889 L12.0479413,12.1074394 C11.9974761,12.1365754 11.9509488,12.1699127 11.9085461,12.2067543 C11.8661433,12.1699127 11.819616,12.1365754 11.7691509,12.1074394 L4.21611835,7.74669402 Z" fill="#000000" opacity="0.3" />
+                                                </g>
+                                            </svg>
+                                            <!--end::Svg Icon-->
+                                        </span>
+                                        <span class="menu-text">Barang</span>
+                                        <i class="menu-arrow"></i>
+                                    </a>
+                                    <div class="menu-submenu">
+                                        <i class="menu-arrow"></i>
+                                        <ul class="menu-subnav">
+                                            <li class="menu-item menu-item-parent" aria-haspopup="true">
+                                                <span class="menu-link">
+                                                    <span class="menu-text">Barang</span>
+                                                </span>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'master-data.warehouse-item.index') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/master-data/item" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Daftar Item</span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'master-data.warehouse-item.create') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/master-data/item/form" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Tambah Item</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                                {{-- <li class="menu-item menu-item-submenu @if(str_contains(Route::currentRouteName(), 'warehouse-item-group')) menu-item-open menu-item-here @endif" aria-haspopup="true" data-menu-toggle="hover">
                                     <a href="javascript:;" class="menu-link menu-toggle">
                                         <span class="svg-icon menu-icon">
                                             <!--begin::Svg Icon | path:assets/media/svg/icons/Shopping/Box2.svg-->
@@ -850,7 +1103,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </li>
+                                </li> --}}
                             </ul>
                             <!--begin::Menu Nav-->
                             <!--end::Menu Nav-->
@@ -860,6 +1113,7 @@
                     <!--end::Aside Menu-->
                 </div>
                 <!--end::Tab Pane-->
+
             </div>
             <!--end::Tab Content-->
         </div>

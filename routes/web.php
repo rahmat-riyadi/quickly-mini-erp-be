@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CounterController;
+use App\Http\Controllers\DeliveryOrderController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\ItemCategoryController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\MonthlySalaryController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\SalaryController;
 use App\Http\Controllers\SaleItemController;
 use App\Http\Controllers\SaleItemGroupController;
 use App\Http\Controllers\ShiftTimeController;
@@ -27,8 +31,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'master-data'], function(){
     Route::post('/counter', [CounterController::class, 'index'])->name('counter.post');
     Route::delete('/counter/delete/{counter}', [CounterController::class, 'destroy']);
-    Route::post('/admin', [AdminController::class, 'index'])->name('admin.post');
-    Route::delete('/admin/delete/{admin}', [AdminController::class, 'destroy']);
+    // Route::post('/admin', [AdminController::class, 'index'])->name('admin.post');
+    // Route::delete('/admin/delete/{admin}', [AdminController::class, 'destroy']);
     Route::post('/supplier', [SupplierController::class, 'index'])->name('supplier.post');
     Route::delete('/supplier/delete/{supplier}', [SupplierController::class, 'destroy']);
     Route::post('/warehouse-item-group', [WarehouseItemGroupController::class, 'index'])->name('warehouseItemGroup.post');
@@ -39,6 +43,10 @@ Route::group(['prefix' => 'master-data'], function(){
     Route::delete('/sale-item-group/delete/{saleItemGroup}', [SaleItemGroupController::class, 'destroy']);
     Route::post('/sale-item', [SaleItemController::class, 'index'])->name('saleItem.post');
     Route::delete('/sale-item/delete/{saleItem}', [SaleItemController::class, 'destroy']);
+    Route::post('/item-category', [ItemCategoryController::class, 'index'])->name('itemCategory.post');
+    Route::delete('/item-category/delete/{itemCategory}', [ItemCategoryController::class, 'destroy']);
+    Route::post('/item', [ItemController::class, 'index'])->name('item.post');
+    Route::delete('/item/delete/{item}', [ItemController::class, 'destroy']);
 });
 
 
@@ -62,4 +70,6 @@ Route::group(['prefix' => 'operational'], function(){
     Route::delete('/delivery-order/delete/{deliveryOrder}', [DeliveryOrderController::class, 'destroy']);
 });
 
+    Route::post('/test', [TestController::class, 'index'])->name('test.post');
+    Route::delete('/test/delete/{test}', [TestController::class, 'destroy']);
         

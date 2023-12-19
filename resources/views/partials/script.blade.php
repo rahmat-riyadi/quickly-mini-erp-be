@@ -15,6 +15,18 @@
 <script src="{{ asset('assets/js/pages/widgets.js?v=7.0.5') }}"></script>
 <!--end::Page Scripts-->
 
+@role('operational')
+    <script data-navigate-once >
+
+        const channel = pusher.subscribe('operational-channel')
+
+        channel.bind('send-do-notification', () => {
+            notificationSound.play()
+        })
+
+    </script>
+@endrole
+
 <script data-navigate-once >
 
 $.ajaxSetup({
@@ -84,6 +96,7 @@ const deleteData = (e, callback) => {
     KTLayoutAsideMenu.init('kt_aside_menu_master_data');
     KTLayoutAsideMenu.init('kt_aside_menu_human_resource');
     KTLayoutAsideMenu.init('kt_aside_menu_operational');
+    KTLayoutAsideMenu.init('kt_aside_menu_counter');
 
 </script>
 

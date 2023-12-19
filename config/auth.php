@@ -39,12 +39,22 @@ return [
 
         'web' => [
             'driver' => 'session',
-            'provider' => 'admins',
+            'provider' => 'users',
         ],
 
         'employee' => [
             'driver' => 'session',
             'provider' => 'employees',
+        ],
+        
+        'employee' => [
+            'driver' => 'session',
+            'provider' => 'employees',
+        ],
+
+        'counter' => [
+            'driver' => 'session',
+            'provider' => 'counters',
         ],
     ],
 
@@ -79,6 +89,11 @@ return [
         'employees' => [
             'driver' => 'eloquent',
             'model' => App\Models\Employee::class,
+        ],
+
+        'counters' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Counter::class,
         ],
     ],
 

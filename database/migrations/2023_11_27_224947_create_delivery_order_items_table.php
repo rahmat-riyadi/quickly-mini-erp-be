@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('delivery_order_items', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('item_id');
+            $table->foreign('item_id')->on('items')->references('id');
+            $table->unsignedBigInteger('do_id');
+            $table->foreign('do_id')->on('delivery_orders')->references('id');
+            $table->double('quantity');
+            $table->double('quantity_recieved');
+            $table->string('reason')->nullable();
+            $table->boolean('status');
             $table->timestamps();
         });
     }
