@@ -17,7 +17,6 @@ class CurrentStatusResource extends JsonResource
         return [
             'status' => $this->status,
             'location' => $this->location,
-            'shift' => $this->shift->from . ' - ' . $this->shift->until,
         ];
     }
 }

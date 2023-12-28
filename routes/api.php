@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AttendanceController;
 use App\Http\Controllers\API\EmployeeController;
 use App\Http\Controllers\API\ShiftTimeController;
+use App\Http\Controllers\API\WorkScheduleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,12 @@ Route::middleware('auth:sanctum')->group(function(){
 
     Route::group(['prefix' => 'shiftTime'], function(){
         Route::controller(ShiftTimeController::class)->group(function(){
+            Route::get('/', 'index');
+        });
+    });
+
+    Route::group(['prefix' => 'schedule'], function(){
+        Route::controller(WorkScheduleController::class)->group(function(){
             Route::get('/', 'index');
         });
     });

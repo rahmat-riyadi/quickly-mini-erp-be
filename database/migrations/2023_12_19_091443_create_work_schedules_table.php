@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('work_schedules', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('employee_id');
-            $table->foreign('employee_id')->references('id')->on('employees');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('CASCADE');
             $table->unsignedBigInteger('counter_id');
-            $table->foreign('counter_id')->references('id')->on('counters');
+            $table->foreign('counter_id')->references('id')->on('counters')->onDelete('CASCADE');
             $table->date('date');
             $table->time('time_in');
             $table->time('time_out');

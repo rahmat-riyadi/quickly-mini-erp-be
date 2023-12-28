@@ -70,12 +70,13 @@ class AttendanceController extends Controller
 
         $employee = $request->user();
         
-        $shift = ShiftTime::find($request->shift_time_id);
         $data = $request->all();
 
         $data['image'] = $request->file('image')->store('attendance');
 
-        $entryDate = Carbon::parse($shift->from);
+        $workSchedule = $request->user()->employee->currentWeekSchedule->where('date', Carbon::now())->first();
+
+        $entryDate = Carbon::parse($workSchedule->time_in);
         $latency = Carbon::now()->greaterThan($entryDate) ? $entryDate->diffInMinutes(Carbon::now()) : 0;
         $latencyMultiple = ceil($latency / 30);
         
@@ -87,8 +88,7 @@ class AttendanceController extends Controller
                 'attendance_time' => Carbon::now(),
                 'location' => $data['location'],
                 'description' => 'Hadir',
-                'is_late' => !Carbon::now()->parse()->lessThanOrEqualTo($shift->from),
-                'shift_time_id' => $data['shift_time_id'],
+                'is_late' => !Carbon::now()->parse()->lessThanOrEqualTo($workSchedule->from),
                 'deduction' => 15000 * $latencyMultiple,
                 'status' => 'Sedang Bekerja'
             ]);

@@ -50,13 +50,8 @@ $submit = function (){
                         <div class="row">
                             <div class="col">
                                 <div class="form-group m-0">
-                                    <label>Tanggal : {{ Log::debug($form->dates) }}</label>
-                                    <select wire:model="form.date" class="custom-select form-control @error('form.counter_id') is-invalid @enderror">
-                                        <option value="">-- pilih hari --</option>
-                                        @foreach ($form->dates as $date)
-                                        <option value="{{ $date }}">{{ \Carbon\Carbon::parse($date)->translatedFormat('l') }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label>Tanggal : </label>
+                                    <input type="date" class="form-control" wire:model="form.date" >
                                 </div>
                             </div>
                             <div class="col">

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('image');
             $table->unsignedBigInteger('employee_id');
-            $table->foreign('employee_id')->on('employees')->references('id');
+            $table->foreign('employee_id')->on('employees')->references('id')->onDelete('CASCADE');
             $table->string('status')->nullable();
             $table->time('attendance_time');
             $table->time('attendance_time_out')->nullable();
