@@ -28,9 +28,9 @@ task('deploy', [
     'php-fpm:reload',
 ]);
 
-// task('npm:run:prod', function () {
-//     cd('{{release_or_current_path}}');
-//     run('npm run prod');
-// });
+task('npm:run:prod', function () {
+    // cd('{{release_or_current_path}}');
+    // run('npm run prod');
+});
 
 after('deploy:failed', 'deploy:unlock');
