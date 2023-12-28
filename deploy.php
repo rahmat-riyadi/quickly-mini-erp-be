@@ -8,7 +8,7 @@ require 'contrib/npm.php';
 
 set('application', 'mylaravelapp');
 set('repository', 'https://github.com/rahmat-riyadi/quickly-mini-erp-be.git');
-set('php_fpm_version', '8.0');
+set('php_fpm_version', '8.2');
 
 host('prod')
     ->set('remote_user', 'root')
