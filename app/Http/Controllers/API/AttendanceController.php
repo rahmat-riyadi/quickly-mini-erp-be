@@ -74,7 +74,8 @@ class AttendanceController extends Controller
 
         $data['image'] = $request->file('image')->store('attendance');
 
-        $workSchedule = $request->user()->employee->currentWeekSchedule->where('date', Carbon::now())->first();
+        $workSchedule = $request->user()->currentWeekSchedule->where('date', Carbon::now()->format('Y-m-d'))->first();
+
 
         $entryDate = Carbon::parse($workSchedule->time_in);
         $latency = Carbon::now()->greaterThan($entryDate) ? $entryDate->diffInMinutes(Carbon::now()) : 0;
@@ -92,8 +93,6 @@ class AttendanceController extends Controller
                 'deduction' => 15000 * $latencyMultiple,
                 'status' => 'Sedang Bekerja'
             ]);
-
-            MonthlySalaryController::store($employee);
 
             $message = 'create data success';
             $status = true;

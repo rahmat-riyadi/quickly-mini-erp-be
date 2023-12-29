@@ -14,6 +14,9 @@ class CurrentStatusResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+
+        
+
         return [
             'status' => $this->status,
             'location' => $this->location,
