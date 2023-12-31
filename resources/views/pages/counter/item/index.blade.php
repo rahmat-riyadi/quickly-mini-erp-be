@@ -6,7 +6,7 @@ use App\Models\CounterItem;
 use App\Models\Counter;
 use App\Models\ItemCategory;
 middleware(['auth']);
-name('counter.inventory.item.index');
+name('counter-menu.inventory.item.index');
 
 
 usesPagination();

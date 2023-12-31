@@ -7,7 +7,7 @@ use App\Events\SendDoNotification;
 use App\Models\Item;
 middleware(['auth']);
 form(DeliveryOrderForm::class);
-name('counter.delivery-order.create');
+name('counter-menu.delivery-order.create');
 
 state([
     'items' => [],

@@ -5,7 +5,7 @@ use function Livewire\Volt\{state, with, usesPagination};
 use App\Models\DeliveryOrder;
 use App\Models\Counter;
 middleware(['auth']);
-name('counter.delivery-order.index');
+name('counter-menu.delivery-order.index');
 
 
 usesPagination();

@@ -541,7 +541,7 @@
                 <!--end::Tab Pane-->
 
                 <!--begin::Tab Pane-->
-                <div class="tab-pane fade @if(str_contains(Route::currentRouteName(), 'counter')) show active @endif" id="counter">
+                <div class="tab-pane fade @if(str_contains(Route::currentRouteName(), 'counter-menu')) show active @endif" id="counter">
                     <!--begin::Aside Menu-->
                     <div class="aside-menu-wrapper flex-column-fluid px-10 py-5" id="kt_aside_menu_wrapper">
                         <!--begin::Menu Container-->

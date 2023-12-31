@@ -3,7 +3,7 @@
 use function Laravel\Folio\{name,middleware};
 use function Livewire\Volt\{state}; 
 middleware(['auth']);
-name('counter.dashboard')
+name('counter-menu.dashboard')
 
 ?>
 

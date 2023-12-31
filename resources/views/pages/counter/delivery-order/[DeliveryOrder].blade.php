@@ -6,7 +6,7 @@ use App\Livewire\Forms\DeliveryOrderForm;
 use App\Models\DeliveryOrder;
 
 middleware(['auth']);
-name('counter.delivery-order.edit');
+name('counter-menu.delivery-order.edit');
 form(DeliveryOrderForm::class);
 
 mount(function(DeliveryOrder $deliveryOrder){
