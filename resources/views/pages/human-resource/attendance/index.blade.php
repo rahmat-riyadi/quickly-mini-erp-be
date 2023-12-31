@@ -122,14 +122,6 @@ name('human-resource.attendance.index')
                         `
                     }
                 },{
-                    field: 'shift',
-                    title: 'Shift',
-                    width: 80
-                },{
-                    field: 'entry_time',
-                    title: 'waktu',
-                    width: 80
-                },{
                     field: 'status',
                     title: 'Status',
                     width: 120,

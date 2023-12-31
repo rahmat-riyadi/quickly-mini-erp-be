@@ -43,4 +43,8 @@ class Employee extends Authenticatable
         ]);
     }
 
+    public function schedule(){
+        return $this->hasMany(WorkSchedule::class)->latest('date');
+    }
+
 }

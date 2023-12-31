@@ -10,11 +10,12 @@ middleware(['auth']);
 name('human-resource.work-schedule.edit');
 form(WorkScheduleForm::class);
 
-state(['counters', 'counter']);
+state(['counters', 'counter', 'work_schedule_type']);
 
 mount(function(Employee $employee){
     $this->counters = Counter::all();
     $this->form->setModel($employee);
+    $this->work_schedule_type = 'week';
 });
 
 $handleUpdateProperty = function ($id, $name, $value){
@@ -89,7 +90,13 @@ $submit = function (){
 
             <div class="card">
                 <div class="card-body">
-
+                    <div class="d-flex justify-content-end mb-7">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button wire:click="$set('work_schedule_type', 'week')" type="button" class="btn @if($work_schedule_type == 'week') btn-primary @else btn-light @endif">Minggu Ini</button>
+                            <button wire:click="$set('work_schedule_type', 'all')" type="button" class="btn @if($work_schedule_type == 'all') btn-primary @else btn-light @endif">Semua</button>
+                        </div>
+                    </div>
+                    @if ($work_schedule_type == 'week')
                     <table style="width: 100%;" class="table table-bordered text-center">
                         <thead class="text-uppercase" >
                             <tr>
@@ -129,6 +136,44 @@ $submit = function (){
                             @endforeach
                         </tbody>
                     </table>
+                    @else
+                    <table style="width: 100%;" class="table table-bordered text-center">
+                        <thead class="text-uppercase" >
+                            <tr>
+                                <th width="50" class="py-4" >#</th> 
+                                <th class="py-4" >Hari</th> 
+                                <th class="py-4" >Counter</th> 
+                                <th class="py-4" >Waktu Masuk</th> 
+                                <th class="py-4" >Waktu Keluar</th> 
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody  >
+                            @foreach($form->employee->schedule as $i=> $item)
+                            <tr class="" >
+                                <td style="vertical-align: middle;" class="py-3 text-center" >{{ $i+1 }}</td>
+                                <td style="vertical-align: middle;" class="py-3 text-center" >{{ \Carbon\Carbon::parse($item->date)->translatedFormat('l, d F Y') }}</td>
+                                <td style="vertical-align: middle;" class="py-3 text-center" >
+                                    {{ $item->counter->name }}
+                                </td>
+                                <td style="vertical-align: middle;" class="py-3 text-center" >
+                                    {{-- <input style="width: 150px;" wire:change.debounce="handleUpdateProperty({{ $item->id }} ,'time_in', $event.target.value)" value="{{ $item->time_in }}" type="time" class="form-control mx-auto" />   --}}
+                                    {{ $item->time_in }}
+                                </td>
+                                <td style="vertical-align: middle;" class="py-3 text-center" >
+                                    {{-- <input style="width: 150px;" wire:change.debounce="handleUpdateProperty({{ $item->id }} ,'time_out', $event.target.value)" value="{{ $item->time_out }}" type="time" class="form-control mx-auto" /> --}}
+                                    {{ $item->time_out }}
+                                </td>
+                                <td>
+                                    <button wire:click="handleDeleteSchedule({{ $item->id }})" class="btn btn-sm btn-icon btn-danger" >
+                                        <i class="flaticon2-rubbish-bin" ></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @endif
 
                     {{-- @foreach($form->employee->currentWeekSchedule as $item)
                         <div class="row">
@@ -174,12 +219,6 @@ $submit = function (){
                 </div>
             </div>
         </form>
-
-        <div class="card">
-            <div class="card-body">
-                <div class="sheet-container"></div>
-            </div>
-        </div>
 
     </div>
 

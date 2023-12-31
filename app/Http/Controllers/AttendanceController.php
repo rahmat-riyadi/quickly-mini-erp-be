@@ -24,18 +24,10 @@ class AttendanceController extends Controller
 
             $url = env('APP_URL');
 
-            $data = Employee::with('position')->leftJoin('attendances', function($join)  {
-                $join->on('employees.id', '=', 'attendances.employee_id')
-                ->join('shift_times', 'shift_times.id', '=', 'attendances.shift_time_id',)
-                ->whereDate('attendances.created_at', '=', Carbon::now());
-            })
+            $data = Employee::with('position')
+            ->leftJoin('attendances', 'attendances.employee_id', '=', 'employees.id')
             ->where('employees.status', true)
-            // ->when($status != 'all' && $status != 'belum absen', function($query) use ($status){
-            //     $query->where('attendances.description', '=', $status);
-            // })
-            // ->when($status == 'belum absen', function($query){
-            //     $query->whereNull('attendances.description');
-            // })
+            ->whereDate('attendances.created_at', Carbon::now())
             ->orderBy('attendances.created_at', 'DESC')
             ->select([
                 'employees.id',
@@ -47,8 +39,6 @@ class AttendanceController extends Controller
                 'attendances.attendance_time_out', 
                 'attendances.status', 
                 'attendances.description', 
-                'shift_times.name as shift', 
-                'shift_times.from as entry_time',
                 'attendances.is_late'
             ])->get();
 

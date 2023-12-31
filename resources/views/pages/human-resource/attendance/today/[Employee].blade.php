@@ -42,14 +42,14 @@ mount(function (Employee $employee) {
                             </div>
                             <div class="col">
                                 <div class="form-group">
-                                    <label>Lama Keterlambatan </label>
-                                    <input type="text" value="{{ $this->form->lattency }}" class="form-control form-control-solid" readonly placeholder="Masukan Nama"/>
+                                    <label>Waktu Keluar </label>
+                                    <input type="text" value="{{ $this->form->attendance->attendance_time_out }}" class="form-control form-control-solid" readonly />
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label>Total Potongan </label>
-                                    <input type="text" value="{{ "Rp ". number_format($this->form->deduction) }}" class="form-control form-control-solid" readonly placeholder="Masukan Nama"/>
+                                    <label>Keterangan </label>
+                                    <input type="text" value="{{ $form->status }}" class="form-control form-control-solid" readonly placeholder="Masukan Nama"/>
                                 </div>
                             </div>
                         </div>
@@ -62,10 +62,10 @@ mount(function (Employee $employee) {
                 </div>
             </div>
             <div class="card-footer text-right">
-                <button type="submit" class="btn btn-primary mr-2">
+                {{-- <button type="submit" class="btn btn-primary mr-2">
                     <span wire:loading >loading</span>
                     <span wire:loading.remove >simpan</span>
-                </button>
+                </button> --}}
                 <a href="/human-resource/attendance" wire:navigate class="btn btn-secondary">Kembali</a>
             </div>
         </div>

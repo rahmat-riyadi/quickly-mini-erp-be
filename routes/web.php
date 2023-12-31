@@ -69,7 +69,3 @@ Route::group(['prefix' => 'operational'], function(){
     Route::post('/delivery-order', [DeliveryOrderController::class, 'index'])->name('deliveryOrder.post');
     Route::delete('/delivery-order/delete/{deliveryOrder}', [DeliveryOrderController::class, 'destroy']);
 });
-
-    Route::post('/test', [TestController::class, 'index'])->name('test.post');
-    Route::delete('/test/delete/{test}', [TestController::class, 'destroy']);
-        
