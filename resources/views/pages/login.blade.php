@@ -134,6 +134,7 @@ $submit = function () {
 
 
         
+        @livewireScripts
         <script>
 
             const toast = Toastify({
