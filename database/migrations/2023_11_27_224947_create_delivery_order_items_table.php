@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('item_id');
             $table->foreign('item_id')->on('items')->references('id');
             $table->unsignedBigInteger('do_id');
-            $table->foreign('do_id')->on('delivery_orders')->references('id');
+            $table->foreign('do_id')->on('delivery_orders')->references('id')->onDelete('CASCADE');
             $table->double('quantity');
             $table->double('quantity_recieved');
             $table->string('reason')->nullable();

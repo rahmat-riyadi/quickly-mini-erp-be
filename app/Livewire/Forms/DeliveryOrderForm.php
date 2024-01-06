@@ -129,27 +129,40 @@ class DeliveryOrderForm extends Form
     }
 
     public function finishDO(){
-        foreach($this->deliveryOrder->items as $item){
-            $counter_item = CounterItem::where('item_id', $item->item_id)
-                            ->where('counter_id', $this->deliveryOrder->counter_id)
-                            ->first();
 
-            if($counter_item){
-                $counter_item->update([
-                    'quantity' => $counter_item->quantity + $item->quantity_recieved
-                ]);
-            } else {
-                CounterItem::create([
-                    'counter_id' => $this->deliveryOrder->counter_id,
-                    'item_id' => $item->item_id,
-                    'quantity' => $item->quantity_recieved
-                ]);
+        DB::beginTransaction();
+
+        try {
+            
+            foreach($this->deliveryOrder->items as $item){
+                $counter_item = CounterItem::where('item_id', $item->item_id)
+                                ->where('counter_id', $this->deliveryOrder->counter_id)
+                                ->first();
+    
+                if($counter_item){
+                    $counter_item->update([
+                        'quantity' => $counter_item->quantity + $item->quantity_recieved
+                    ]);
+                } else {
+                    CounterItem::create([
+                        'counter_id' => $this->deliveryOrder->counter_id,
+                        'item_id' => $item->item_id,
+                        'quantity' => $item->quantity_recieved
+                    ]);
+                }
             }
+    
+            $this->deliveryOrder->update([
+                'status' => 'Selesai'
+            ]);
+
+            DB::commit();
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw new Exception($th->getMessage());
         }
 
-        $this->deliveryOrder->update([
-            'status' => 'Selesai'
-        ]);
 
     }
 

@@ -53,17 +53,20 @@ $handleChangeStatus = function ($status){
                     </h3>
                 </div>
                 <div class="card-toolbar">
-                    @if ($form->deliveryOrder->status != 'Selesai')
+                    @if (!in_array($form->deliveryOrder->status, ['Selesai', 'Ditolak', 'Diterima']))
+                    {{-- @if ($form->deliveryOrder->status != 'Selesai') --}}
                     <button 
                         wire:click="handleChangeStatus('Diterima')" 
-                        class="btn btn-sm btn-outline-success font-weight-bold"
+                        class="btn btn-sm btn-outline-success font-weight-bold mr-4"
                         @if (is_null($this->form->delivery_date) || is_null($this->form->delivery_time))
                             disabled
                         @endif
                     >
                         <i class="flaticon2-hourglass-1"></i> Terima
                     </button>
-                    <button wire:click="handleChangeStatus('Ditolak')" type="button" class="btn btn-sm btn-outline-danger font-weight-bold mx-4">
+                    @endif
+                    @if (!in_array($form->deliveryOrder->status, ['Selesai', 'Diterima']))
+                    <button wire:click="handleChangeStatus('Ditolak')" type="button" class="btn btn-sm btn-outline-danger font-weight-bold mr-4">
                         <i class="flaticon2-cross icon-sm"></i> Tolak
                     </button>
                     @endif
@@ -175,7 +178,7 @@ $handleChangeStatus = function ($status){
                 </div>
                 <div class="card-footer text-right">
                     <button type="submit" class="btn btn-primary mr-2">
-                        <span wire:target="submit" wire:loading >loading</span>
+                        {{-- <span wire:target="submit" wire:loading >loading</span> --}}
                         <span wire:target="submit" wire:loading.remove >simpan</span>
                     </button>
                     <a href="/operational/delivery-order" wire:navigate class="btn btn-secondary">Kembali</a>

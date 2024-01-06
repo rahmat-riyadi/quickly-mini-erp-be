@@ -368,7 +368,7 @@
                                             </svg>
                                             <!--end::Svg Icon-->
                                         </span>
-                                        <span class="menu-text">Kehadiran</span>
+                                        <span class="menu-text">Absensi</span>
                                         <i class="menu-arrow"></i>
                                     </a>
                                     <div class="menu-submenu">
@@ -376,7 +376,7 @@
                                         <ul class="menu-subnav">
                                             <li class="menu-item menu-item-parent" aria-haspopup="true">
                                                 <span class="menu-link">
-                                                    <span class="menu-text">Kehadiran</span>
+                                                    <span class="menu-text">Absensi</span>
                                                 </span>
                                             </li>
                                             <li class="menu-item @if(Route::currentRouteName() == 'human-resource.attendance.index') menu-item-active @endif" aria-haspopup="true">
@@ -384,7 +384,15 @@
                                                     <i class="menu-bullet menu-bullet-dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="menu-text">Daftar Kehadiran</span>
+                                                    <span class="menu-text">Hari ini</span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'human-resource.attendance.all') menu-item-active @endif" aria-haspopup="true">
+                                                <a wire:navigate href="/human-resource/attendance/all" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Absensi Pegawai</span>
                                                 </a>
                                             </li>
                                         </ul>

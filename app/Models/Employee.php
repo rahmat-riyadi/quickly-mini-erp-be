@@ -36,6 +36,10 @@ class Employee extends Authenticatable
         return $this->hasMany(Salary::class);
     }
 
+    public function currentMonthAttendance(){
+        return $this->hasMany(Attendance::class)->whereMonth('created_at', Carbon::now());
+    }
+
     public function currentWeekSchedule(){
         return $this->hasMany(WorkSchedule::class)->whereBetween('date', [
             Carbon::now()->startOfWeek(),

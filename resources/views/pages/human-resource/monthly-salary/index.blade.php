@@ -31,6 +31,7 @@ with(fn()=>[
             'employees.name', 
             'employees.position_id', 
             'monthly_salaries.total_salary',
+            'monthly_salaries.salary_deduction',
             'salaries.base_salary'
         ])->paginate($this->perpage),
 ]);
@@ -121,17 +122,17 @@ with(fn()=>[
                             <td style="vertical-align: middle;" >{{ $i+1 }}</td>
                             <td style="vertical-align: middle;" >{{ $item->name }}</td>
                             <td style="vertical-align: middle;" class="text-center" >
-                                {{ $item->base_salary ?? '' }}
+                                Rp {{ number_format($item->base_salary) ?? '' }}
                             </td>
                             <td style="vertical-align: middle;" class="text-center" >
-                                {{ $item->total_salary ?? '' }}
+                                Rp {{ number_format($item->salary_deduction) ?? '' }}
                             </td>
                             <td style="vertical-align: middle;" class="text-center" >
-                                {{ $item->total_salary ?? '' }}
+                                Rp {{ number_format($item->total_salary) ?? '' }}
                             </td>
                             </td>
                             <td>
-                                <a href="/counter/delivery-order/{{ $item->id }}" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">
+                                <a href="/human-resource/monthly-salary/{{ $item->id }}/detail" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">
                                     <span class="svg-icon svg-icon-md svg-icon-success">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

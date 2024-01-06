@@ -7,14 +7,14 @@ name('human-resource.attendance.index')
 
 ?>
 
-<x-layouts.app subheaderTitle="Kehadiran" >
+<x-layouts.app subheaderTitle="Absensi - Hari ini" >
     @volt
     <div class="container">
 
         <div class="card card-custom">
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
                 <div class="card-title">
-                    <h3 class="card-label">Daftar Kehadiran</h3>
+                    <h3 class="card-label">Daftar Absensi</h3>
                 </div>
                 <div class="card-toolbar">
                     <!--begin::Dropdown-->

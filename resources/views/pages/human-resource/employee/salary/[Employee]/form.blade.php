@@ -18,6 +18,8 @@ mount(function (Employee $employee){
 
 $submit = function (){
 
+    $this->validate();
+
     try {
         $this->form->store();
         session()->flash('success', 'Data berhasil ditambah');
@@ -66,9 +68,8 @@ $submit = function (){
                     </div>
                 </div>
                 <div class="card-footer text-right">
-                    <button type="submit" class="btn btn-primary mr-2">
-                        <span wire:loading >loading</span>
-                        <span wire:loading.remove >simpan</span>
+                    <button wire:target="submit" wire:loading.attr="disabled" type="submit" class="btn btn-primary mr-2">
+                        Simpan
                     </button>
                     <a href="/human-resource/employee/salary/{{ $employee->id }}" wire:navigate class="btn btn-secondary">Kembali</a>
                 </div>
