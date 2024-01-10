@@ -1,63 +1,46 @@
 <?php
  
 use function Laravel\Folio\{name,middleware};
-use function Livewire\Volt\{state, with, usesPagination, mount, on}; 
+use function Livewire\Volt\{state, mount, on, updated}; 
 middleware(['auth']);
 use App\Models\Employee;
 use App\Models\Attendance;
 name('human-resource.attendance.all');
 
-usesPagination();
-
 state([
-    'perpage' => 10,
-    'keyword' => '',
     'list_of_employees' => [],
-    'from' => '',
-    'until' => '',
-    'selected_employee' => null
+    'selected_employee' => null,
 ]);
 
 mount(function (){
     $this->list_of_employees = Employee::where('status', true)->get();
 });
 
-with(fn() => [
-    'attendances' => Attendance::when(!is_null($this->selected_employee), function($q){
-        $q->where('employee_id', $this->selected_employee->id);
-    })
-    ->when(!empty($this->from) || !empty($this->until), function ($q){
-
-        if(empty($this->from)){
-            $q->where('created_at','<=', $this->until);
-            return;
-        } 
-
-        if(empty($this->until)){
-            $q->where('created_at','>=', $this->from);
-            return;
-        } 
-
-
-        $q->whereBetween('created_at',[
-            $this->from,
-            $this->until,
-        ]);
-    })
-    ->paginate($this->perpage)
-]);
 
 $get_employee = function ($id){
-    $this->selected_employee = Employee::find($id);
+    $this->selected_employee = $id;
+    $data = Attendance::latest()
+    ->select(
+        'id',
+        'employee_id',
+        'deduction',
+        'location',
+        'image',
+        'is_late',
+        DB::raw("(CASE WHEN is_late = 1 THEN 'Ya' ElSE 'Tidak' END) as formatted_late"),
+        DB::raw("DATE_FORMAT(created_at, '%d/%m/%Y') as date"),
+        DB::raw("TIME_FORMAT(attendance_time, '%H:%i') as attendance_time"),
+        DB::raw("TIME_FORMAT(attendance_time_out, '%H:%i') as attendance_time_out"),
+    )
+    ->get();
+    Log::info(json_decode($data));
+    $this->dispatch('loadData', $data);
 };
 
-$filter = function (){
 
-};
-
-$reset_filter = function (){
-    $this->from = '';
-    $this->until = '';
+$get_salaries = function (){
+    $data = Attendance::latest()->get();
+    $this->dispatch('loadData', $data);
 };
 
 on(['getEmployee' => 'get_employee']);
@@ -69,7 +52,7 @@ on(['getEmployee' => 'get_employee']);
     <div class="container">
 
         <div class="row">
-            <div class="col-4">
+            <div class="col">
                 <div class="card card-custom">
                     <div class="card-body p-4">
                         <div wire:ignore class="form-group m-0">
@@ -84,7 +67,7 @@ on(['getEmployee' => 'get_employee']);
                     </div>
                 </div>
             </div>
-            <div class="col">
+            {{-- <div class="col">
                 <div class="card card-custom">
                     <div class="card-body p-4">
                         <div class="row">
@@ -108,88 +91,191 @@ on(['getEmployee' => 'get_employee']);
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
         </div>
 
-        @if (!is_null($selected_employee))
+
         <div class="card card-custom mt-6">
-            <div class="card-header flex-wrap border-0 pt-6 pb-0">
-                <div class="card-title">
-                    <h3 class="card-label">Daftar Absensi</h3>
-                </div>
+            <div wire:ignore class="card-body">
+                <div id="excel-container"></div>
             </div>
-            <div class="card-body">
-                <table class="table table-hover table-bordered" >
-                    <thead class="text-center text-uppercase" >
-                        <tr>
-                            <th style="vertical-align: middle;" width="50" class="" scope="col" >
-                                #
-                            </th>
-                            <th style="vertical-align: middle;" width="200" class="" scope="col" >
-                                Tanggal
-                            </th>
-                            <th class=" text-center" scope="col" >
-                                Terlambat
-                            </th>
-                            <th style="vertical-align: middle;" >Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center" >
-                        @foreach ($attendances as $i => $item)
-                        <tr>
-                            <td style="vertical-align: middle;" >{{ $i+1 }}</td>
-                            <td style="vertical-align: middle;" >{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
-                            <td style="vertical-align: middle;" >{{ $item->is_late == 1 ? 'Terlambat' : '' }}</td>
-                            <td>
-                                <a href="/human-resource/monthly-salary/{{ $item->id }}/detail" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">
-                                    <span class="svg-icon svg-icon-md svg-icon-success">
-                                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                <rect x="0" y="0" width="24" height="24"/>
-                                                <path d="M3,12 C3,12 5.45454545,6 12,6 C16.9090909,6 21,12 21,12 C21,12 16.9090909,18 12,18 C5.45454545,18 3,12 3,12 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
-                                                <path d="M12,15 C10.3431458,15 9,13.6568542 9,12 C9,10.3431458 10.3431458,9 12,9 C13.6568542,9 15,10.3431458 15,12 C15,13.6568542 13.6568542,15 12,15 Z" fill="#000000" opacity="0.3"/>
-                                            </g>
-                                        </svg>
-                                    </span>
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                <div class="d-flex justify-content-between align-items-center flex-wrap">
-
-                    {{ $attendances->links('components.pagination') }}
-                    
-                    <div class="d-flex align-items-center py-3">
-                        <select wire:model.live="perpage" class="form-control form-control-sm font-weight-bold mr-4 border-0 bg-light" style="width: 75px;">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                        </select>
-                        <span class="text-muted">Menampilkan {{ $attendances->links()->paginator->count() }} dari {{  $attendances->links()->paginator->total() }} data</span>
-                    </div>
-                </div>
-                <!--end: Datatable-->
+            <div class="card-footer text-right">
+                <button type="button" class="btn btn-primary save" >
+                    Simpan
+                </button>
             </div>
         </div>
-        @else
-            <div class="d-flex bg-white py-12 mt-6" >
-                <span class="m-auto text-muted" >Belum ada data</span>
-            </div>
-        @endif
+
     </div>
 
     <script>
 
         document.addEventListener('livewire:navigated', () => {
+
+            function saveSchedule(data){
+                $.ajax({
+                    url: "{{ route('attendance.update') }}",
+                    method: 'POST',
+                    data: {
+                        attendances: data
+                    },
+                    beforeSend: () => {
+                        Swal.fire({
+                            title: "<div class='spinner-border text-info' role='status'></div>",
+                            text: "Menyimpan data...",
+                            showConfirmButton: false,
+                            allowOutsideClick: false,
+                        });
+                    },
+                    success: res => {
+                        window.Livewire.dispatch('getSchedules')
+                        Swal.fire({
+                            icon: 'success',
+                            title: "Berhasil!",
+                            text: 'Data berhasil disimpan',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    },
+                    error: err => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: "Gagal",
+                            text: err.responseJSON.message ?? 'Kesalahan internal',
+                            showCloseButton: true,
+                            showConfirmButton: false,
+                        });
+                    },
+                })
+            }
+
+            function deleteData(id){
+                $.ajax({
+                    url: '/human-resource/work-schedule/delete/' + id,
+                    type: 'delete',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: res => console.log(res),
+                    error: err => console.log(err),
+                })
+            }
+
+            function getFormattedDate() {
+                const today = new Date();
+                
+                const day = String(today.getDate()).padStart(2, '0');
+                const month = String(today.getMonth() + 1).padStart(2, '0'); // Month dimulai dari 0, jadi perlu ditambah 1
+                const year = today.getFullYear();
+        
+                return `${day}/${month}/${year}`;
+            }
+
             $('#select_2').select2({
                 placeholder: "Pilih Pegawai"
             });
             
             $('#select_2').on('change', (e) => {
                 Livewire.dispatch('getEmployee', { id: e.target.value})
+            })
+
+            const container = document.querySelector('#excel-container');
+
+            const hot = new Handsontable(container, {
+                cells: function(row, col, prop) {
+                    var cellProperties = {};
+                    if(['formatted_late'].includes(prop)){
+                        cellProperties.className = 'htMiddle htCenter';
+                    }
+                    if(['deduction'].includes(prop)){
+                        cellProperties.className = 'htMiddle htRight';
+                    }
+                    return cellProperties;
+                },
+                hiddenColumns: {
+                    columns: [0,1],
+                },
+                filters: true,
+                dropdownMenu: true,
+                className: 'htMiddle ',
+                columns: [
+                    {
+                        data: 'id'
+                    },
+                    {
+                        data: 'is_late'
+                    },
+                    {
+                        data: 'date',
+                        type: 'date',
+                        width: 70,
+                        readOnly: true,
+                    },
+                    {
+                        data: 'attendance_time',
+                        type: 'time',
+                        timeFormat: 'HH:mm',
+                        correctFormat: true,
+                        width: 50,
+                    },
+                    {
+                        data: 'attendance_time_out',
+                        type: 'time',
+                        timeFormat: 'HH:mm',
+                        correctFormat: true,
+                        width: 50
+                    },
+                    {
+                        data: 'location',
+                        width: 150
+                    },
+                    {
+                        data: 'formatted_late',
+                        width: 50,
+                        type: 'dropdown',
+                        source: ['Ya', 'Tidak'],
+                    },
+                    {
+                        data: 'deduction',
+                        width: 60,
+                        type: 'numeric',
+                        numericFormat: {
+                            pattern: '0,00'
+                        }
+                    },
+                ],
+                rowHeaders: true,
+                colHeaders: true,
+                colHeaders: ['id', 'is_late','Tanggal', 'Jam Masuk', 'Jam Keluar', 'Lokasi', 'Terlambat', 'Potongan'],
+                contextMenu: true,
+                height: 350,
+                rowHeights: 35,
+                manualRowMove: true,
+                stretchH: 'all', 
+                licenseKey: 'non-commercial-and-evaluation',  // for non-commercial use only
+                afterChange: (changes) => {
+                    changes?.forEach(([row, prop, oldVal, newVal]) => {
+                        if(prop == 'formatted_late'){
+                            if(newVal == 'Ya'){
+                                hot.setDataAtCell(row, 1, 1)
+                            } else {
+                                hot.setDataAtCell(row, 1, 0)
+                            }
+                        }
+                    })
+                },
+            });
+
+            window.Livewire.on('loadData', ([ data ]) => {
+                hot.loadData(data)  
+            })
+
+            window.Livewire.on('setCounterId', ([row, id]) => {
+                hot.setDataAtCell(row, 1, id)
+            })
+
+            document.querySelector('.save').addEventListener('click', () => {
+                saveSchedule(hot.getData())
             })
             
         })

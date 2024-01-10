@@ -48,6 +48,35 @@ class AttendanceController extends Controller
         }
     }
 
+    public function update(Request $request){
+
+        DB::beginTransaction();
+
+        try {
+
+            foreach($request->attendances as $attendance){
+
+                Attendance::find($attendance[0])->update([
+                    'attendance_time' => $attendance[3],
+                    'attendance_time_out' => $attendance[4],
+                    'is_late' => $attendance[1],
+                    'deduction' => $attendance[7]
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
+
+    }
+
     public function destroy(Attendance $attendance, Request $request){
         try {
             $attendance->delete();

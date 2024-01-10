@@ -15,12 +15,12 @@ state([
 
 
 with(fn()=>[
-    'employees' => Employee::with('position')
+    'employees' => Employee::with(['position', 'currentSalary'])
         ->leftJoin('monthly_salaries', function($join){
             $join->on('employees.id', '=', 'monthly_salaries.employee_id')
-            ->whereMonth('monthly_salaries.created_at', '=', \Carbon\Carbon::now());
+            ->whereMonth('monthly_salaries.created_at', '=', \Carbon\Carbon::now())
+            ->whereYear('monthly_salaries.created_at', '=', \Carbon\Carbon::now());
         })
-        ->leftJoin('salaries', 'salaries.employee_id', '=', 'employees.id')
         ->where('status', true)
         ->orderBy('employees.name', 'ASC')
         ->when(!empty($this->keyword), function ($q) {
@@ -32,7 +32,6 @@ with(fn()=>[
             'employees.position_id', 
             'monthly_salaries.total_salary',
             'monthly_salaries.salary_deduction',
-            'salaries.base_salary'
         ])->paginate($this->perpage),
 ]);
 
@@ -122,7 +121,7 @@ with(fn()=>[
                             <td style="vertical-align: middle;" >{{ $i+1 }}</td>
                             <td style="vertical-align: middle;" >{{ $item->name }}</td>
                             <td style="vertical-align: middle;" class="text-center" >
-                                Rp {{ number_format($item->base_salary) ?? '' }}
+                                Rp {{ number_format($item->currentSalary->base_salary ?? 0)}}
                             </td>
                             <td style="vertical-align: middle;" class="text-center" >
                                 Rp {{ number_format($item->salary_deduction) ?? '' }}

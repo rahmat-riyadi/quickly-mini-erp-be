@@ -11,4 +11,8 @@ class MonthlySalary extends Model
 
     protected $guarded = ['id'];
 
+    function employee(){
+        return $this->belongsTo(Employee::class)->select('id')->with('currentSalary');
+    }
+
 }

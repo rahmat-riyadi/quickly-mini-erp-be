@@ -16,6 +16,17 @@ class CounterController extends Controller
         }
     }
 
+    public function getAllCounter(Request $request){
+
+        $q = $request->name;
+
+        $data = Counter::where('name', 'LIKE', "%{$request->name}%")->get();
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+
     public function destroy(Counter $counter, Request $request){
         try {
             $counter->delete();

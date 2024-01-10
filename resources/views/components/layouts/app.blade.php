@@ -10,8 +10,14 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         @include('partials.style')
 		<link rel="shortcut icon" href="{{ asset('assets/media/logos/logo.png') }}" />
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
-		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+
+		{{-- package library --}}
+		@stack('heads')
+		<script  src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+		<script  src="https://cdn.jsdelivr.net/npm/pikaday@1.8.2/pikaday.min.js"></script>
+		<link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pikaday@1.8.2/css/pikaday.css">
+		<link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
+		<script  type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
 		<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 		<script data-navigate-once >
 
@@ -42,9 +48,9 @@
 					<!--begin::Content-->
 					<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
 						<!--begin::Subheader-->
-						{{-- @if (Route::currentRouteName() != 'cashier')
-						@endif --}}
-						<x-subheader :$subheaderTitle />
+						{{-- @if (Route::currentRouteName() != 'human-resource.work-schedule.create') --}}
+							<x-subheader :$subheaderTitle />
+						{{-- @endif --}}
 						<!--end::Subheader-->
 						<!--begin::Entry-->
 						<div class="d-flex flex-column-fluid">
@@ -56,7 +62,7 @@
 					</div>
 					<!--end::Content-->
 					<!--begin::Footer-->
-					@if (Route::currentRouteName() != 'cashier')
+					@if(!in_array(Route::currentRouteName(), ['cashier']))
 					<x-footer/>
 					@endif
 					<!--end::Footer-->

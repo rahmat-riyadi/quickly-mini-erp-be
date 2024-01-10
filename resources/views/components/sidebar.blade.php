@@ -288,13 +288,13 @@
                                     <div class="menu-submenu">
                                         <i class="menu-arrow"></i>
                                         <ul class="menu-subnav">
-                                            <li class="menu-item menu-item-parent" aria-haspopup="true">
+                                    <li class="menu-item menu-item-parent" aria-haspoapup="true">
                                                 <span class="menu-link">
                                                     <span class="menu-text">Jam Kerja</span>
                                                 </span>
                                             </li>
                                             <li class="menu-item @if(Route::currentRouteName() == 'human-resource.work-schedule.index') menu-item-active @endif" aria-haspopup="true">
-                                                <a wire:navigate href="/human-resource/work-schedule" class="menu-link">
+                                                <a  href="/human-resource/work-schedule" class="menu-link">
                                                     <i class="menu-bullet menu-bullet-dot">
                                                         <span></span>
                                                     </i>
@@ -302,7 +302,7 @@
                                                 </a>
                                             </li>
                                             <li class="menu-item @if(Route::currentRouteName() == 'human-resource.work-schedule.create') menu-item-active @endif" aria-haspopup="true">
-                                                <a wire:navigate href="/human-resource/work-schedule/form" class="menu-link">
+                                                <a href="/human-resource/work-schedule/form" class="menu-link">
                                                     <i class="menu-bullet menu-bullet-dot">
                                                         <span></span>
                                                     </i>
@@ -388,7 +388,7 @@
                                                 </a>
                                             </li>
                                             <li class="menu-item @if(Route::currentRouteName() == 'human-resource.attendance.all') menu-item-active @endif" aria-haspopup="true">
-                                                <a wire:navigate href="/human-resource/attendance/all" class="menu-link">
+                                                <a href="/human-resource/attendance/all" class="menu-link">
                                                     <i class="menu-bullet menu-bullet-dot">
                                                         <span></span>
                                                     </i>
@@ -427,7 +427,15 @@
                                                     <i class="menu-bullet menu-bullet-dot">
                                                         <span></span>
                                                     </i>
-                                                    <span class="menu-text">Daftar Upah</span>
+                                                    <span class="menu-text">Upah Bulan Ini</span>
+                                                </a>
+                                            </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'human-resource.monthly-salary.all') menu-item-active @endif" aria-haspopup="true">
+                                                <a href="/human-resource/monthly-salary/all" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Daftar Upah Karyawan</span>
                                                 </a>
                                             </li>
                                         </ul>

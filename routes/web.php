@@ -15,6 +15,7 @@ use App\Http\Controllers\ShiftTimeController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WarehouseItemController;
 use App\Http\Controllers\WarehouseItemGroupController;
+use App\Http\Controllers\WorkScheduleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'master-data'], function(){
+    Route::post('/counter/dropdown', [CounterController::class, 'getAllCounter']);
     Route::post('/counter', [CounterController::class, 'index'])->name('counter.post');
     Route::delete('/counter/delete/{counter}', [CounterController::class, 'destroy']);
     // Route::post('/admin', [AdminController::class, 'index'])->name('admin.post');
@@ -60,9 +62,13 @@ Route::group(['prefix' => 'human-resource'], function(){
     Route::post('/salary', [SalaryController::class, 'index'])->name('salary.post');
     Route::delete('/salary/delete/{salary}', [SalaryController::class, 'destroy']);
     Route::post('/attendance', [AttendanceController::class, 'index'])->name('attendance.post');
+    Route::post('/attendance/employee/update', [AttendanceController::class, 'update'])->name('attendance.update');
     Route::delete('/attendance/delete/{attendance}', [AttendanceController::class, 'destroy']);
     Route::post('/monthly-salary', [MonthlySalaryController::class, 'index'])->name('monthlySalary.post');
     Route::delete('/monthly-salary/delete/{monthlySalary}', [MonthlySalaryController::class, 'destroy']);
+    Route::post('/work-schedule/store', [WorkScheduleController::class, 'store'])->name('workschedule.store');
+    Route::post('/work-schedule/employee/update', [WorkScheduleController::class, 'update'])->name('workschedule.update');
+    Route::delete('/work-schedule/delete/{workSchedule}', [WorkScheduleController::class, 'destroy']);
 });
 
 Route::group(['prefix' => 'operational'], function(){

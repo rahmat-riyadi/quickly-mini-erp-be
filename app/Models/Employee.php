@@ -35,6 +35,10 @@ class Employee extends Authenticatable
     public function salary(){
         return $this->hasMany(Salary::class);
     }
+    
+    public function currentSalary(){
+        return $this->hasOne(Salary::class)->latest();
+    }
 
     public function currentMonthAttendance(){
         return $this->hasMany(Attendance::class)->whereMonth('created_at', Carbon::now());
