@@ -50,7 +50,7 @@ $submit = function (){
                             @if (empty($form->image))
                             <div class="image-input-wrapper" style="background-image: url(assets/media/users/100_1.jpg)"></div>
                             @else
-                            <div class="image-input-wrapper" style="background-image: url({{ asset('storage/'.$form->image) }})"></div>
+                            <div class="image-input-wrapper" style="background-image: url({{ asset('storage/'.$form->image) }}); background-position: center; "></div>
                             @endif
                             <label class="btn btn-xs btn-icon btn-circle btn-white btn-hover-text-primary btn-shadow" data-action="change" data-toggle="tooltip" title="" data-original-title="Change avatar">
                                 <i class="fa fa-pen icon-sm text-muted"></i>
