@@ -46,8 +46,6 @@ class AttendanceController extends Controller
             );
         }
 
-
-
     }
 
     public function getCurrentStatus(Request $request){

@@ -3,32 +3,40 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Employee;
+use App\Models\User;
 use Livewire\Attributes\Rule;
 use Livewire\Form;
 
 class EmployeeForm extends Form
 {
+
+
+    public function __construct()
+    {
+        $this->status = 1;
+    }
+
     public ?Employee $employee;
 
-    #[Rule('required')]
+    #[Rule('required', message: 'nama harus diisi')]
     public $name;
     
-    #[Rule('required')]
+    #[Rule('required', message: 'jabatan harus diisi')]
     public $position_id;
 
-    #[Rule('required')]
+    #[Rule('required', message: 'nik harus diisi')]
     public $nik;
 
-    #[Rule('required')]
+    #[Rule('required', message: 'kk harus diisi')]
     public $kk;
 
-    #[Rule('required')]
+    #[Rule('required', message: 'alamat harus diisi')]
     public $address;
 
-    #[Rule('required')]
+    #[Rule('required', message: 'tanggal lahir harus diisi')]
     public $date_of_birth;
 
-    #[Rule('required')]
+    #[Rule('required', message: 'tempat lahir harus diisi')]
     public $place_of_birth;
 
     #[Rule('nullable')]
@@ -40,13 +48,13 @@ class EmployeeForm extends Form
     #[Rule('nullable')]
     public $religion;
 
-    #[Rule('required')]
+    #[Rule('required', message: 'No HP lahir harus diisi')]
     public $phone;
 
     #[Rule('nullable')]
     public $email;
     
-    #[Rule('required')]
+    #[Rule('required', 'tanggal masuk harus diisi')]
     public $entry_date;
 
     #[Rule('nullable')]
@@ -59,9 +67,12 @@ class EmployeeForm extends Form
     public $username;
 
     #[Rule('nullable')]
+    public $password;
+
+    #[Rule('nullable')]
     public $newPassword;
 
-    #[Rule('required')]
+    #[Rule('nullable')]
     public $status;
 
     public function setModel(Employee $employee){
