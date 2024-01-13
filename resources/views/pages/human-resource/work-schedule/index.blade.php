@@ -292,10 +292,6 @@ updated([
                             // First day of the week (0: Sunday, 1: Monday, etc)
                             firstDay: 0,
                             showWeekNumber: true,
-                            disableDayFn(date) {
-                            // Disable Sunday and Saturday
-                                return date.getDay() === 0 || date.getDay() === 6;
-                            }
                         },
                     },
                     {
@@ -336,9 +332,19 @@ updated([
                         }
                     })
                 },
-                afterRemoveRow: (row) => {
-                    deleteData(hot.getDataAtCell(row, 0))
+                afterCreateRow: (index, amout) => {
+                    hot.setDataAtCell(
+                        index, 
+                        2, 
+                        hot.getDataAtCell(index == 0 ? 1 : index-1,2)
+                    )
+                },
+                beforeRemoveRow: (row, amount, rows) => {
+                    rows.forEach(row => {
+                        deleteData(hot.getDataAtCell(row, 0) ?? 0)
+                    })
                 }
+                
             });
 
             window.Livewire.on('loadData', ([ data ]) => {

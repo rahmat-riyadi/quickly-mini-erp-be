@@ -8,6 +8,7 @@ use App\Models\WorkSchedule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\DataTables;
 
 class WorkScheduleController extends Controller
@@ -79,15 +80,25 @@ class WorkScheduleController extends Controller
         try {
 
             foreach($request->schedules as $schedule){
-                WorkSchedule::updateOrCreate(
-                    ['id' => $schedule[0]],
-                    [
+
+                if(empty($schedule[0])){
+                    WorkSchedule::create([
+                        'counter_id' => $schedule[1],
+                        'employee_id' => $schedule[2],
+                        'date' => Carbon::createFromFormat('d/m/Y',$schedule[3])->format('Y-m-d'),
+                        'time_in' => $schedule[5],
+                        'time_out' => $schedule[6],
+                    ]);
+                } else {
+                    WorkSchedule::find($schedule[0])
+                    ->update([
                         'counter_id' => $schedule[1],
                         'date' => Carbon::createFromFormat('d/m/Y',$schedule[3])->format('Y-m-d'),
                         'time_in' => $schedule[5],
                         'time_out' => $schedule[6],
-                    ]
-                );
+                    ]);
+                }
+
             }
 
             DB::commit();
@@ -103,9 +114,12 @@ class WorkScheduleController extends Controller
 
     }
 
-    public function destroy(WorkSchedule $workSchedule, Request $request){
+    public function destroy($id){
+
+        if($id == 0) return;
+
         try {
-            $workSchedule->delete();
+            WorkSchedule::find($id)->delete();
             $status = true;
             $message = 'data berhasil dihapus';
         } catch (\Exception $e){

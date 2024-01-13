@@ -17,6 +17,7 @@ class SaleItemGroupController extends Controller
     }
 
     public function destroy(SaleItemGroup $saleItemGroup, Request $request){
+
         try {
             $saleItemGroup->delete();
             $status = true;
