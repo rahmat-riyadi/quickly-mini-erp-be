@@ -35,7 +35,8 @@ with(fn()=> [
         'id',
         'name',
         'status',
-        'position_id'
+        'position_id',
+        'image'
     )
     ->paginate($this->perpage)
 ])
@@ -123,6 +124,9 @@ with(fn()=> [
                                 #
                             </th>
                             <th style="vertical-align: middle;" width="200" class="" scope="col" >
+                                Gambar
+                            </th>
+                            <th style="vertical-align: middle;" width="200" class="" scope="col" >
                                 Nama
                             </th>
                             <th class=" text-center" scope="col" >
@@ -138,6 +142,9 @@ with(fn()=> [
                         @foreach ($employees as $i => $item)
                         <tr>
                             <td style="vertical-align: middle;" >{{ $i+1 }}</td>
+                            <td style="vertical-align: middle;" >
+                                <img style="object-position: center; object-fit: cover;" width="80" height="80" src="{{ asset('storage/'.$item->image) }}" alt="">
+                            </td>
                             <td style="vertical-align: middle;" >{{ $item->name }}</td>
                             <td style="vertical-align: middle;" class="text-center" >
                                 {{ $item->position->name }}
@@ -147,7 +154,7 @@ with(fn()=> [
                                     {{ $item->status == 1 ? 'Aktif' : 'Non Aktif' }}
                                 </span>
                             </td>
-                            <td>
+                            <td style="vertical-align: middle;" >
                                 <a href="/human-resource/employee/{{ $item->id }}" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">
                                     <span class="svg-icon svg-icon-md svg-icon-success">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
