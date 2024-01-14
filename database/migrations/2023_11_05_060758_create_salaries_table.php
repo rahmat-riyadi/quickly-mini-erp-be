@@ -16,8 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('employee_id');
             $table->foreign('employee_id')->references('id')->on('employees');
             $table->decimal('base_salary', 10);
-            $table->string('time_off');
-            $table->decimal('attendance_intensive');
+            $table->string('time_off')->nullable();
+            $table->decimal('attendance_intensive', 10)->nullable();
+            $table->decimal('split', 10)->nullable();
+            $table->decimal('transport', 10)->nullable();
             $table->timestamps();
         });
     }

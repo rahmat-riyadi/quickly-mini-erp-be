@@ -48,7 +48,7 @@ $submit = function (){
                     <div class="mb-8" >
                         <div class="image-input image-input-outline" id="kt_image_1">
                             @if (empty($form->image))
-                            <div class="image-input-wrapper" style="background-image: url(assets/media/users/100_1.jpg)"></div>
+                            <div class="image-input-wrapper" style="background-image: url(assets/media/users/100_1.jpg);  background-position: center; "></div>
                             @else
                             <div class="image-input-wrapper" style="background-image: url({{ asset('storage/'.$form->image) }}); background-position: center; "></div>
                             @endif

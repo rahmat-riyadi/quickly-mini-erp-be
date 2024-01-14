@@ -438,6 +438,14 @@
                                                     <span class="menu-text">Daftar Upah Karyawan</span>
                                                 </a>
                                             </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'human-resource.monthly-salary.master') menu-item-active @endif" aria-haspopup="true">
+                                                <a href="/human-resource/monthly-salary/master" class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Data Master Upah</span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </li>

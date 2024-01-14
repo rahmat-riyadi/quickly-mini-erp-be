@@ -59,8 +59,8 @@ Route::group(['prefix' => 'human-resource'], function(){
     Route::delete('/shiftTime/delete/{shiftTime}', [ShiftTimeController::class, 'destroy']);
     Route::post('/employee', [EmployeeController::class, 'index'])->name('employee.post');
     Route::delete('/employee/delete/{employee}', [EmployeeController::class, 'destroy']);
-    Route::post('/salary', [SalaryController::class, 'index'])->name('salary.post');
-    Route::delete('/salary/delete/{salary}', [SalaryController::class, 'destroy']);
+    Route::post('/salary', [SalaryController::class, 'store'])->name('salary.store');
+    Route::delete('/salary/delete/{id}', [SalaryController::class, 'destroy']);
     Route::post('/attendance', [AttendanceController::class, 'index'])->name('attendance.post');
     Route::post('/attendance/employee/update', [AttendanceController::class, 'update'])->name('attendance.update');
     Route::delete('/attendance/delete/{attendance}', [AttendanceController::class, 'destroy']);
