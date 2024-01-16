@@ -28,7 +28,7 @@ name('human-resource.dashboard')
                                 <!--end::Svg Icon-->
                             </span>
                             <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block">{{ $residentTotal ?? 0 }}</span>
-                            <span class="font-weight-bold text-muted font-size-sm">Total Pegawai</span>
+                            <span class="font-weight-bold text-muted font-size-sm">Jumlah Pegawai</span>
                         </a>
                     </div>
                     <!--end::Body-->
@@ -51,7 +51,7 @@ name('human-resource.dashboard')
                                 <!--end::Svg Icon-->
                             </span>
                             <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block">{{ $umkmTotal ?? 0 }}</span>
-                            <span class="font-weight-bold text-muted font-size-sm">Total UMKM Desa</span>
+                            <span class="font-weight-bold text-muted font-size-sm">Jumlah Counter</span>
                         </a>
                     </div>
                     <!--end::Body-->

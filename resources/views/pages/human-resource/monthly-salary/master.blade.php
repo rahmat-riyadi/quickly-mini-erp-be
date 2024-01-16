@@ -48,7 +48,7 @@ on(['getSalaries' => 'get_salaries']);
 
 ?>
 
-<x-layouts.app subheaderTitle="Jam Kerja" >
+<x-layouts.app subheaderTitle="Data Master Upah" >
     @volt
     <div class="container">
 

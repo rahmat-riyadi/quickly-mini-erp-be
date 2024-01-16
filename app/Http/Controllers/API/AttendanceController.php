@@ -8,18 +8,16 @@ use App\Http\Resources\Attendance\CurrentStatusResource;
 use App\Models\ShiftTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class AttendanceController extends Controller
 {
 
 
-    public function changeStatus(Request $request, $status){
+    public function changeStatus(Request $request){
 
-        if($status == 'work'){
-            $status = "Sedang Bekerja";
-        } else {
-            $status = ucfirst($status);
-        }
+
+        $currStatus = Str::title($request->status);
 
         try {
 
@@ -28,7 +26,7 @@ class AttendanceController extends Controller
                     ->whereNull('attendance_time_out')
                     ->first();
 
-            $attendance->update(['status' => $status]);
+            $attendance->update(['status' => $currStatus]);
                 
             return $this->response(
                 status: 200,
