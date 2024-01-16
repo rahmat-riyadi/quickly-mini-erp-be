@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->group(function(){
     Route::group(['prefix' => 'attendance'], function(){
         Route::controller(AttendanceController::class)->group(function(){
             Route::post('/store', 'store');
-            Route::get('/changeStatus/{status}', 'changeStatus');
+            Route::post('/changeStatus', 'changeStatus');
             Route::get('/status', 'getCurrentStatus');
             Route::get('/timeOut', 'timeOut');
         });
