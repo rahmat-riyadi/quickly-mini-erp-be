@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'rahmat.riyadi',
             'password' => bcrypt('qazwsx'),
             'phone' => fake()->phoneNumber,
-            'status' => fake()->randomElement([true, false])
+            'status' => true
         ]);
 
         $user->assignRole('operational');

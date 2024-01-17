@@ -20,6 +20,7 @@ return new class extends Migration
             $table->time('attendance_time');
             $table->time('attendance_time_out')->nullable();
             $table->boolean('is_late');
+            $table->boolean('is_overtime')->default(0);
             $table->string('description');
             $table->string('location');
             $table->integer('deduction')->default(0);

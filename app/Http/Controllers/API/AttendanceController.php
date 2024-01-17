@@ -17,7 +17,7 @@ class AttendanceController extends Controller
     public function changeStatus(Request $request){
 
 
-        $currStatus = Str::title($request->status);
+        $currStatus = ucfirst($request->status);
 
         try {
 
