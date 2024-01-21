@@ -27,7 +27,9 @@ $get_employee = function ($id){
         'location',
         'image',
         'is_late',
+        'is_overtime',
         DB::raw("(CASE WHEN is_late = 1 THEN 'Ya' ElSE 'Tidak' END) as formatted_late"),
+        DB::raw("(CASE WHEN is_overtime = 1 THEN 'Ya' ElSE 'Tidak' END) as formatted_overtime"),
         DB::raw("DATE_FORMAT(created_at, '%d/%m/%Y') as date"),
         DB::raw("TIME_FORMAT(attendance_time, '%H:%i') as attendance_time"),
         DB::raw("TIME_FORMAT(attendance_time_out, '%H:%i') as attendance_time_out"),
@@ -67,31 +69,6 @@ on(['getEmployee' => 'get_employee']);
                     </div>
                 </div>
             </div>
-            {{-- <div class="col">
-                <div class="card card-custom">
-                    <div class="card-body p-4">
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group m-0">
-                                    <label style="display: block;" >Dari </label>
-                                    <input wire:model.live="from" type="date" class="form-control" name="" id="">
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group m-0">
-                                    <label style="display: block;" >Sampai </label>
-                                    <input wire:model.live="until" type="date" class="form-control" >
-                                </div>
-                            </div>
-                            <div class="col align-self-end">
-                                <button type="button" wire:click="reset_filter" class="btn btn-light btn-block">
-                                    Reset
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
         </div>
 
 
@@ -193,7 +170,7 @@ on(['getEmployee' => 'get_employee']);
                     return cellProperties;
                 },
                 hiddenColumns: {
-                    columns: [0,1],
+                    columns: [0,1,2],
                 },
                 filters: true,
                 dropdownMenu: true,
@@ -204,6 +181,9 @@ on(['getEmployee' => 'get_employee']);
                     },
                     {
                         data: 'is_late'
+                    },
+                    {
+                        data: 'is_overtime'
                     },
                     {
                         data: 'date',
@@ -236,6 +216,12 @@ on(['getEmployee' => 'get_employee']);
                         source: ['Ya', 'Tidak'],
                     },
                     {
+                        data: 'formatted_overtime',
+                        width: 50,
+                        type: 'dropdown',
+                        source: ['Ya', 'Tidak'],
+                    },
+                    {
                         data: 'deduction',
                         width: 60,
                         type: 'numeric',
@@ -246,7 +232,7 @@ on(['getEmployee' => 'get_employee']);
                 ],
                 rowHeaders: true,
                 colHeaders: true,
-                colHeaders: ['id', 'is_late','Tanggal', 'Jam Masuk', 'Jam Keluar', 'Lokasi', 'Terlambat', 'Potongan'],
+                colHeaders: ['id', 'is_late', 'is_overtime','Tanggal', 'Jam Masuk', 'Jam Keluar', 'Lokasi', 'Terlambat', 'Lembur','Potongan'],
                 contextMenu: true,
                 height: 350,
                 rowHeights: 35,
@@ -260,6 +246,14 @@ on(['getEmployee' => 'get_employee']);
                                 hot.setDataAtCell(row, 1, 1)
                             } else {
                                 hot.setDataAtCell(row, 1, 0)
+                            }
+                        }
+
+                        if(prop == 'formatted_overtime'){
+                            if(newVal == 'Ya'){
+                                hot.setDataAtCell(row, 2, 1)
+                            } else {
+                                hot.setDataAtCell(row, 2, 0)
                             }
                         }
                     })

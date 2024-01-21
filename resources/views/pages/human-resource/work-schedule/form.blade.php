@@ -201,10 +201,6 @@ $submit = function (){
                             // First day of the week (0: Sunday, 1: Monday, etc)
                             firstDay: 0,
                             showWeekNumber: true,
-                            disableDayFn(date) {
-                            // Disable Sunday and Saturday
-                                return date.getDay() === 0 || date.getDay() === 6;
-                            }
                         }
                     },
                     {

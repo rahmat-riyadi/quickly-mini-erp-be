@@ -57,10 +57,11 @@ class AttendanceController extends Controller
             foreach($request->attendances as $attendance){
 
                 Attendance::find($attendance[0])->update([
-                    'attendance_time' => $attendance[3],
-                    'attendance_time_out' => $attendance[4],
+                    'attendance_time' => $attendance[4],
+                    'attendance_time_out' => $attendance[5],
                     'is_late' => $attendance[1],
-                    'deduction' => $attendance[7]
+                    'is_overtime' => $attendance[2],
+                    'deduction' => $attendance[9],
                 ]);
             }
 
