@@ -84,6 +84,8 @@ class EmployeeForm extends Form
 
         $data = $this->all();
 
+        $data['password'] = bcrypt($this->password);
+
         if($this->image){
             $data['image'] = $this->image->store('employee-image');
         }
@@ -99,6 +101,6 @@ class EmployeeForm extends Form
             $data['password'] = bcrypt($this->newPassword);
         }
 
-        $this->employee->update($this->all());
+        $this->employee->update($data);
     }
 }
