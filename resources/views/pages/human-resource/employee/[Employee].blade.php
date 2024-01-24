@@ -250,7 +250,7 @@ $submit = function (){
                     </div>
                     <div class="form-group">
                         <label>Kata Sandi :</label>
-                        <input type="text" wire:model="form.password" class="form-control form-control-solid @error('form.name') is-invalid @enderror" placeholder="Masukan Password"/>
+                        <input type="text" wire:model="form.newPassword" class="form-control form-control-solid @error('form.name') is-invalid @enderror" placeholder="Masukan Password"/>
                         @error('form.name')
                             <div class="invalid-feedback">
                                 {{ $message }}
