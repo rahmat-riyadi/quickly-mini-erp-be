@@ -3,6 +3,8 @@
 use function Laravel\Folio\{name,middleware};
 use function Livewire\Volt\{state, mount, usesPagination, with}; 
 use App\Models\Employee;
+use App\Models\MonthlySalary;
+use App\Models\Attendance;
 middleware(['auth']);
 name('human-resource.monthly-salary.index');
 
@@ -10,7 +12,9 @@ usesPagination();
 
 state([
     'perpage' => 5,
-    'keyword' => ''
+    'keyword' => '',
+    'start_date' => '',
+    'end_date' => '',
 ]);
 
 
@@ -35,13 +39,106 @@ with(fn()=>[
         ])->paginate($this->perpage),
 ]);
 
+$count_salary = function (){
+
+    $this->validate([
+        'start_date' => 'required',
+        'end_date' => 'required',
+    ],[
+        'start_date.required' => 'Tanggal mulai harus diisi',
+        'end_date.required' => 'Tanggal akhir harus diisi',
+    ]);
+
+    $employees = Employee::where('status', true)->get();
+
+    foreach($employees as $i => $employee){
+        
+        $salary = $employee->salary()->latest()->first();
+
+        if(is_null($salary)){
+            continue;
+        }
+
+        $attendance = Attendance::where('created_at', '>=', $this->start_date)
+                    ->where('created_at', '<=', $this->end_date)
+                    ->where('employee_id', '=', $employee->id)
+                    ->get();
+
+        Log::debug($attendance);
+
+        $totalDeduction = $attendance->reduce(function($curr, $item){
+            return $curr + $item['deduction'];
+        });
+        
+
+        $totalSalary = $salary->base_salary - $totalDeduction;
+
+        $currentSalary = MonthlySalary::where('employee_id', $employee->id)
+                        ->whereMonth('created_at', \Carbon\Carbon::now())
+                        ->whereYear('created_at', \Carbon\Carbon::now())
+                        ->first();
+
+        if($currentSalary){
+            $currentSalary->update([
+                'salary_deduction' => $totalDeduction,
+                'total_salary' => $totalSalary
+            ]);
+        } else {
+            MonthlySalary::create([
+                'employee_id' => $employee->id,
+                'salary_deduction' => $totalDeduction,
+                'total_salary' => $totalSalary
+            ]);
+        }
+
+        Log::info('run calculate salary');
+
+    }
+
+
+    
+};
+
 ?>
 
-<x-layouts.app subheaderTitle="MonthlySalary" >
+<x-layouts.app subheaderTitle="Upah Bulanan" >
     @volt
     <div class="container">
 
         {{-- {{ dd($employees) }} --}}
+
+        <form wire:submit="count_salary">
+            <div class="card card-custom mb-6">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group m-0">
+                                <label style="display: block;" >Tanggal Mulai </label>
+                                <input wire:model="start_date" type="date" class="form-control @error('start_date') is-invalid @enderror" >
+                                @error('end_date')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group m-0">
+                                <label style="display: block;" >Tanggal Akhir </label>
+                                <input  wire:model="end_date" type="date" class="form-control @error('end_date') is-invalid @enderror" >
+                                @error('end_date')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-2 align-self-end">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Akumulasi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
 
         <div class="card card-custom">
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
@@ -57,18 +154,6 @@ with(fn()=>[
                         </span>
                     </div>
                     <!--end::Dropdown-->
-                    <!--begin::Button-->
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Bulan Ini
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
-                    <!--end::Button-->
                 </div>
             </div>
             <div class="card-body">

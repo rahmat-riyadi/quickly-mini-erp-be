@@ -42,6 +42,10 @@ class CalculateSalary extends Command
             $totalDeduction = $employee->currentMonthAttendance->reduce(function($curr, $item){
                 return $curr + $item['deduction'];
             });
+            
+            $totalDeduction = $employee->currentMonthAttendance->reduce(function($curr, $item){
+                return $curr + $item['deduction'];
+            });
 
             $totalSalary = $salary->base_salary - $totalDeduction;
 
