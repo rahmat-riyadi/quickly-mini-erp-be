@@ -27,9 +27,7 @@ $get_employee = function ($id){
         'location',
         'image',
         'is_late',
-        'is_overtime',
         DB::raw("(CASE WHEN is_late = 1 THEN 'Ya' ElSE 'Tidak' END) as formatted_late"),
-        DB::raw("(CASE WHEN is_overtime = 1 THEN 'Ya' ElSE 'Tidak' END) as formatted_overtime"),
         DB::raw("DATE_FORMAT(created_at, '%d/%m/%Y') as date"),
         DB::raw("TIME_FORMAT(attendance_time, '%H:%i') as attendance_time"),
         DB::raw("TIME_FORMAT(attendance_time_out, '%H:%i') as attendance_time_out"),
@@ -170,7 +168,7 @@ on(['getEmployee' => 'get_employee']);
                     return cellProperties;
                 },
                 hiddenColumns: {
-                    columns: [0,1,2],
+                    columns: [0,1],
                 },
                 filters: true,
                 dropdownMenu: true,
@@ -216,12 +214,6 @@ on(['getEmployee' => 'get_employee']);
                         source: ['Ya', 'Tidak'],
                     },
                     {
-                        data: 'formatted_overtime',
-                        width: 50,
-                        type: 'dropdown',
-                        source: ['Ya', 'Tidak'],
-                    },
-                    {
                         data: 'deduction',
                         width: 60,
                         type: 'numeric',
@@ -232,7 +224,7 @@ on(['getEmployee' => 'get_employee']);
                 ],
                 rowHeaders: true,
                 colHeaders: true,
-                colHeaders: ['id', 'is_late', 'is_overtime','Tanggal', 'Jam Masuk', 'Jam Keluar', 'Lokasi', 'Terlambat', 'Lembur','Potongan'],
+                colHeaders: ['id', 'is_late', 'Tanggal', 'Jam Masuk', 'Jam Keluar', 'Lokasi', 'Terlambat', 'Potongan'],
                 contextMenu: true,
                 height: 350,
                 rowHeights: 35,
@@ -249,13 +241,6 @@ on(['getEmployee' => 'get_employee']);
                             }
                         }
 
-                        if(prop == 'formatted_overtime'){
-                            if(newVal == 'Ya'){
-                                hot.setDataAtCell(row, 2, 1)
-                            } else {
-                                hot.setDataAtCell(row, 2, 0)
-                            }
-                        }
                     })
                 },
             });

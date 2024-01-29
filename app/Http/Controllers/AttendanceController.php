@@ -60,8 +60,7 @@ class AttendanceController extends Controller
                     'attendance_time' => $attendance[4],
                     'attendance_time_out' => $attendance[5],
                     'is_late' => $attendance[1],
-                    'is_overtime' => $attendance[2],
-                    'deduction' => $attendance[9],
+                    'deduction' => $attendance[8],
                 ]);
             }
 
