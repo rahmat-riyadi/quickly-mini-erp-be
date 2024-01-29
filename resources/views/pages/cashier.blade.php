@@ -13,7 +13,7 @@ state([
     'perpage' => 5,
     'category' => '',
     'keyword' => '',
-    'selected_item' => null,
+    'selected_item' => -1,
     'order_list' => []
 ]);
 
@@ -32,7 +32,7 @@ with(fn()=> [
 ]);
 
 $set_selected_item = function ($i){
-    $this->selected_item = $i == $this->selected_item ? null : $i;
+    $this->selected_item = $i == $this->selected_item ? -1 : $i;
 };
 
 $handle_add_item = function ($val){
@@ -46,7 +46,19 @@ $handle_add_item = function ($val){
             'quantity' => 1,
             'price' => $val['sale_price']
         ];
+        return;
     }
+
+    [
+        [
+            'id' => 1,
+            'name' => 'hehe'
+        ],
+        [
+            'id' => 2,
+            'name' => 'hehe'
+        ],
+    ];
 
 
 };
@@ -92,7 +104,7 @@ $handle_add_item = function ($val){
     <div class="container" >
         <div class="row">
             <div class="col-7">
-                @if (is_null($selected_item))
+                @if ($selected_item == -1)
                 <div class="card card-custom">
                     <div class="card-body">
                         <div class="row mb-5">

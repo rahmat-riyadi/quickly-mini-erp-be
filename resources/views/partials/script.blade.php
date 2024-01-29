@@ -29,12 +29,28 @@
 
 <script data-navigate-once >
 
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    }
-});
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
+    Livewire.on('show-notif', (e) => {
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: e[0] ? 'Berhasil' : 'Gagal',
+            text: e[1],
+            icon: e[0] ? 'success' : 'danger'
+        })
+    })
 
 const deleteData = (e, callback) => {
     let action = $(e).data('href')

@@ -16,7 +16,9 @@ state([
 with(fn()=> [
     'employees'  => Employee::with(['position'])
     ->leftJoin('attendances', function($q){
-        $q->on('attendances.employee_id', '=','employees.id')->latest();
+        $q->on('attendances.employee_id', '=','employees.id')
+        ->whereDate('attendances.created_at', \Carbon\Carbon::now())
+        ->latest();
     })
     ->when(!empty($this->keyword), function($q){
         $q->where('name', "LIKE", "%{$this->keyword}%");

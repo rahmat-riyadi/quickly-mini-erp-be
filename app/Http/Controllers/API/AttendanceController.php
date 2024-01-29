@@ -72,7 +72,6 @@ class AttendanceController extends Controller
 
         $workSchedule = $request->user()->currentWeekSchedule->where('date', Carbon::now()->format('Y-m-d'))->first();
 
-
         $entryDate = Carbon::parse($workSchedule->time_in);
         $latency = Carbon::now()->greaterThan($entryDate) ? $entryDate->diffInMinutes(Carbon::now()) : 0;
         $latencyMultiple = ceil($latency / 30);
@@ -85,7 +84,7 @@ class AttendanceController extends Controller
                 'attendance_time' => Carbon::now(),
                 'location' => $data['location'],
                 'description' => 'Hadir',
-                'is_late' => !Carbon::now()->parse()->lessThanOrEqualTo($workSchedule->from),
+                'is_late' => !Carbon::now()->parse()->lessThanOrEqualTo($workSchedule->time_in),
                 'deduction' => 15000 * $latencyMultiple,
                 'status' => 'Sedang Bekerja'
             ]);
