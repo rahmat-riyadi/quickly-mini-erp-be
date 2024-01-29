@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('overtimes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('attendance_id');
-            $table->foreign('attendance_id')->on('attendances')->references('id');
+            $table->foreign('attendance_id')->on('attendances')->references('id')->onDelete('CASCADE');
             $table->enum('overtime_type', ['Biasa', 'Fix', 'Tanggal Merah']);
             $table->time('start_time');
             $table->time('end_time');

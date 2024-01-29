@@ -77,9 +77,12 @@ class AttendanceController extends Controller
 
     }
 
-    public function destroy(Attendance $attendance, Request $request){
+    public function destroy($id){
+
+        if($id == 0) return;
+
         try {
-            $attendance->delete();
+            Attendance::find($id)->delete();
             $status = true;
             $message = 'data berhasil dihapus';
         } catch (\Exception $e){

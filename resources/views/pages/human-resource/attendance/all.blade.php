@@ -126,7 +126,7 @@ on(['getEmployee' => 'get_employee']);
 
             function deleteData(id){
                 $.ajax({
-                    url: '/human-resource/work-schedule/delete/' + id,
+                    url: '/human-resource/attendance/delete/' + id,
                     type: 'delete',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -240,6 +240,11 @@ on(['getEmployee' => 'get_employee']);
 
                     })
                 },
+                beforeRemoveRow: (row, amount, rows) => {
+                    rows.forEach(row => {
+                        deleteData(hot.getDataAtCell(row, 0) ?? 0)
+                    })
+                }
             });
 
             window.Livewire.on('loadData', ([ data ]) => {

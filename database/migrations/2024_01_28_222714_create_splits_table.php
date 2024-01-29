@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('splits', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('attendance_id');
-            $table->foreign('attendance_id')->on('attendances')->references('id');
+            $table->foreign('attendance_id')->on('attendances')->references('id')->onDelete('CASCADE');
             $table->unsignedBigInteger('counter_id');
-            $table->foreign('counter_id')->on('counters')->references('id');
+            $table->foreign('counter_id')->on('counters')->references('id')->onDelete('CASCADE');
             $table->timestamps();
         });
     }
