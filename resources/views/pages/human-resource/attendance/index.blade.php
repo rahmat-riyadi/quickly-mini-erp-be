@@ -28,7 +28,6 @@ with(fn()=> [
         'employees.name',
         'attendances.status',
         'attendances.is_late',
-        'attendances.is_overtime',
     )
     ->paginate($this->perpage)
 ])
@@ -95,9 +94,6 @@ with(fn()=> [
                             <th style="vertical-align: middle;" class=" text-center" scope="col" >
                                 Terlambat
                             </th>
-                            <th style="vertical-align: middle;" class=" text-center" scope="col" >
-                                Lembur
-                            </th>
                             <th style="vertical-align: middle;" >Aksi</th>
                         </tr>
                     </thead>
@@ -115,9 +111,6 @@ with(fn()=> [
                             </td>
                             <td style="vertical-align: middle;" class="text-center" >
                                 {{ $item->is_late ? 'Ya' : 'Tidak' }}
-                            </td>
-                            <td style="vertical-align: middle;" class="text-center" >
-                                {{ $item->is_overtime ? 'Ya' : 'Tidak' }}
                             </td>
                             <td style="vertical-align: middle;" >
                                 <a href="/human-resource/attendance/today/{{ $item->id }}" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">
