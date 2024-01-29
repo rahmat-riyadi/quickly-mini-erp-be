@@ -181,9 +181,6 @@ on(['getEmployee' => 'get_employee']);
                         data: 'is_late'
                     },
                     {
-                        data: 'is_overtime'
-                    },
-                    {
                         data: 'date',
                         type: 'date',
                         width: 70,
