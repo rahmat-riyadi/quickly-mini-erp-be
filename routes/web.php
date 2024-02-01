@@ -66,6 +66,7 @@ Route::group(['prefix' => 'human-resource'], function(){
     Route::delete('/attendance/delete/{id}', [AttendanceController::class, 'destroy']);
     Route::post('/monthly-salary', [MonthlySalaryController::class, 'index'])->name('monthlySalary.post');
     Route::delete('/monthly-salary/delete/{monthlySalary}', [MonthlySalaryController::class, 'destroy']);
+    Route::delete('/overtime/delete/{overtimeMaster}', [MonthlySalaryController::class, 'destroyOvertime']);
     Route::post('/work-schedule/store', [WorkScheduleController::class, 'store'])->name('workschedule.store');
     Route::post('/work-schedule/employee/update', [WorkScheduleController::class, 'update'])->name('workschedule.update');
     Route::delete('/work-schedule/delete/{id}', [WorkScheduleController::class, 'destroy']);

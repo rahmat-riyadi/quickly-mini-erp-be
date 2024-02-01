@@ -159,7 +159,7 @@ on(['getEmployee' => 'get_employee']);
             const hot = new Handsontable(container, {
                 cells: function(row, col, prop) {
                     var cellProperties = {};
-                    if(['formatted_late'].includes(prop)){
+                    if(['formatted_late', 'act'].includes(prop)){
                         cellProperties.className = 'htMiddle htCenter';
                     }
                     if(['deduction'].includes(prop)){
@@ -218,10 +218,16 @@ on(['getEmployee' => 'get_employee']);
                             pattern: '0,00'
                         }
                     },
+                    {   
+                        data:'id',
+                        renderer: (instance, td, row, col, prop, value, cellProperties) => {
+                            td.innerHTML = `<a wire.navigate.hover href="/human-resource/attendance/detail/${value}" class="btn text-primary font-weight-bolder" >Detail</a>`
+                        }
+                    }
                 ],
                 rowHeaders: true,
                 colHeaders: true,
-                colHeaders: ['id', 'is_late', 'Tanggal', 'Jam Masuk', 'Jam Keluar', 'Lokasi', 'Terlambat', 'Potongan'],
+                colHeaders: ['id', 'is_late', 'Tanggal', 'Jam Masuk', 'Jam Keluar', 'Lokasi', 'Terlambat', 'Potongan', 'Aksi'],
                 contextMenu: true,
                 height: 350,
                 rowHeights: 35,

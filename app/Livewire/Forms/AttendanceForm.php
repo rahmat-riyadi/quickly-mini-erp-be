@@ -58,6 +58,31 @@ class AttendanceForm extends Form
     #[Rule('required', message: 'Counter harus diisi')]
     public $counter_id;
 
+    public function setAttendance(Attendance $attendance){
+        $this->attendance = $attendance;
+        $this->employee = $attendance->employee;
+        $this->fill([
+            'status' => $attendance->status,
+            'attendance_time' => $attendance->attendance_time,
+            'attendance_time_out' => $attendance->attendance_time_out,
+            'is_late' => $attendance->is_late,
+            'description' => $attendance->description,
+            'location' => $attendance->location,
+            'deduction' => $attendance->deduction,
+            'image' => $attendance->image,
+        ]);
+
+        $workSchedule = WorkSchedule::where('employee_id', $this->employee->id)
+                        ->where('date', Carbon::now()->format('Y-m-d'))
+                        ->first();
+
+        $timeIn = Carbon::parse($workSchedule->time_in);
+        $attendanceTime = Carbon::parse($this->attendance->attendance_time);
+        $diff = $attendanceTime->greaterThan($timeIn) ? $attendanceTime->diff($timeIn)->format('%H:%I:%S') : 0;
+
+        $this->fill(['lattency' => $diff]);
+    }
+
     public function setModel(Employee $employee){
 
         $this->employee = $employee;

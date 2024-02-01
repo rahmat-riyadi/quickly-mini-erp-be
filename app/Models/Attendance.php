@@ -20,6 +20,10 @@ class Attendance extends Model
         return $this->belongsTo(ShiftTime::class, 'shift_time_id');
     }
 
+    public function employee(){
+        return $this->belongsTo(Employee::class);
+    }
+
     public function overtime(){
         return $this->hasOne(Overtime::class);
     }

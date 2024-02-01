@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\MonthlySalary;
+use App\Models\OvertimeMaster;
 use App\Models\Salary;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -83,6 +84,19 @@ class MonthlySalaryController extends Controller
     public function destroy(MonthlySalary $monthlySalary, Request $request){
         try {
             $monthlySalary->delete();
+            $status = true;
+            $message = 'data berhasil dihapus';
+        } catch (\Exception $e){
+            $status = false;
+            $message = $e->getMessage();
+        }
+
+        return response()->json(compact('status', 'message'));
+    }
+
+    public function destroyOvertime(OvertimeMaster $overtimeMaster, Request $request){
+        try {
+            $overtimeMaster->delete();
             $status = true;
             $message = 'data berhasil dihapus';
         } catch (\Exception $e){
