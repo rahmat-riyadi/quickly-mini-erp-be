@@ -2,6 +2,7 @@
  
 use function Laravel\Folio\{name,middleware};
 use function Livewire\Volt\{state, mount, usesPagination, with}; 
+use App\Models\Split;
 use App\Models\Employee;
 use App\Models\MonthlySalary;
 use App\Models\Attendance;
@@ -34,6 +35,7 @@ with(fn()=>[
             'employees.id',
             'employees.name', 
             'employees.position_id', 
+            'monthly_salaries.id as salary_id',
             'monthly_salaries.total_salary',
             'monthly_salaries.salary_deduction',
         ])->paginate($this->perpage),
@@ -59,19 +61,33 @@ $count_salary = function (){
             continue;
         }
 
-        $attendance = Attendance::where('created_at', '>=', $this->start_date)
-                    ->where('created_at', '<=', $this->end_date)
-                    ->where('employee_id', '=', $employee->id)
+        $attendance = Attendance::where('attendances.created_at', '>=', $this->start_date)
+                    ->where('attendances.created_at', '<=', $this->end_date)
+                    ->where('attendances.employee_id', '=', $employee->id)
+                    ->leftJoin('overtimes', 'overtimes.attendance_id', '=', 'attendances.id')
+                    ->select(
+                        'attendances.id',
+                        'attendances.deduction',
+                        'overtimes.amount',
+                    )
                     ->get();
 
-        Log::debug($attendance);
+        Log::debug($attendance->pluck('id'));
+
+        $split_amount = Split::whereIn('attendance_id', $attendance->pluck('id'))->count();
+
+        $total_split = $split_amount * $salary->split;
 
         $totalDeduction = $attendance->reduce(function($curr, $item){
             return $curr + $item['deduction'];
         });
+
+        $totalOvertime = $attendance->reduce(function($curr, $item){
+            return $curr + $item['amount'] ?? 0;
+        });
         
 
-        $totalSalary = $salary->base_salary - $totalDeduction;
+        $totalSalary = $salary->base_salary - $totalDeduction + $totalOvertime + $total_split;
 
         $currentSalary = MonthlySalary::where('employee_id', $employee->id)
                         ->whereMonth('created_at', \Carbon\Carbon::now())
@@ -81,13 +97,21 @@ $count_salary = function (){
         if($currentSalary){
             $currentSalary->update([
                 'salary_deduction' => $totalDeduction,
-                'total_salary' => $totalSalary
+                'total_salary' => $totalSalary,
+                'overtime_pay' => $totalOvertime,
+                'split' => $total_split,
+                'start_date' => $this->start_date,
+                'end_date' => $this->end_date,
             ]);
         } else {
             MonthlySalary::create([
                 'employee_id' => $employee->id,
                 'salary_deduction' => $totalDeduction,
-                'total_salary' => $totalSalary
+                'total_salary' => $totalSalary,
+                'overtime_pay' => $totalOvertime,
+                'split' => $total_split,
+                'start_date' => $this->start_date,
+                'end_date' => $this->end_date,
             ]);
         }
 
@@ -216,7 +240,7 @@ $count_salary = function (){
                             </td>
                             </td>
                             <td>
-                                <a href="/human-resource/monthly-salary/{{ $item->id }}/detail" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">
+                                <a href="/human-resource/monthly-salary/{{ $item->salary_id }}/detail" wire:navigate class="btn btn-sm  btn-light btn-icon mr-2" title="Edit details">
                                     <span class="svg-icon svg-icon-md svg-icon-success">
                                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">

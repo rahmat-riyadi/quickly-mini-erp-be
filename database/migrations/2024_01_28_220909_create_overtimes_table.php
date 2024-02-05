@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('attendance_id');
             $table->foreign('attendance_id')->on('attendances')->references('id')->onDelete('CASCADE');
-            $table->enum('overtime_type', ['Biasa', 'Fix', 'Tanggal Merah']);
+            $table->unsignedBigInteger('overtime_master_id')->nullable();
+            $table->foreign('overtime_master_id')->on('overtime_masters')->references('id')->onDelete('SET NULL');
             $table->time('start_time');
             $table->time('end_time');
             $table->decimal('amount', 10);

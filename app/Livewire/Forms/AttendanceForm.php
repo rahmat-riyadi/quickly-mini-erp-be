@@ -94,10 +94,10 @@ class AttendanceForm extends Form
 
         if (!is_null($this->attendance->overtime)) {
             $this->fill([
-                'overtime_type' => $this->attendance->overtime->overtime_type,
+                'overtime_type' => $this->attendance->overtime->overtime_master_id,
                 'start_time' => $this->attendance->overtime->start_time,
                 'end_time' => $this->attendance->overtime->end_time,
-                'amount' => $this->attendance->overtime->amount,
+                'amount' => number_format($this->attendance->overtime->amount),
             ]);
         }
 
@@ -131,13 +131,16 @@ class AttendanceForm extends Form
     }
 
     public function storeOvertime(){
+
+        $amount = str_replace(',','',$this->amount);
+
         $this->attendance->overtime()->updateOrCreate([
             'attendance_id' => $this->attendance->id,
         ],[
-            'overtime_type' => $this->overtime_type,
+            'overtime_master_id' => $this->overtime_type,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
-            'amount' => $this->amount ?? 0,
+            'amount' => $amount ?? 0,
         ]);
     }
 

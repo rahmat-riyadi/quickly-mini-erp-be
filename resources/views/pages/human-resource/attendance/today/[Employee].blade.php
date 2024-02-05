@@ -1,17 +1,19 @@
 <?php
 
 use function Laravel\Folio\{name,middleware};
-use function Livewire\Volt\{rules, state, form, mount};
+use function Livewire\Volt\{rules, state, form, mount, updated};
 use App\Models\Employee;
 use App\Models\Counter;
+use App\Models\OvertimeMaster;
 use App\Livewire\Forms\AttendanceForm;
 
 name('human-resource.attendance.detail');
 form(AttendanceForm::class);
 
-state(['has_overtime', 'has_split','counter']);
+state(['has_overtime', 'has_split','counter', 'overtimeMaster']);
 
 mount(function (Employee $employee) {
+    $this->overtimeMaster = OvertimeMaster::all();
     $this->counter = Counter::all();
     $this->form->setModel($employee);
     $this->has_overtime = !is_null($this->form->attendance->overtime);
@@ -67,6 +69,36 @@ $submit_split = function (){
         $this->dispatch('show-notif', false, $th->getMessage());
     }
 
+};
+
+$handle_change_time = function (){
+
+    if(empty($this->form->start_time) || empty($this->form->start_time) || empty($this->form->overtime_type)){
+        return;
+    }
+
+    $overtime = OvertimeMaster::find($this->form->overtime_type);
+
+    $multiplier = 173 * $overtime->multiplier;
+
+    $amount = $this->form->employee->currentSalary->base_salary / $multiplier;
+
+    $to = \Carbon\Carbon::parse($this->form->start_time);
+    $from = \Carbon\Carbon::parse($this->form->end_time);
+
+    $diff = $to->diffInHours($from);
+
+    $overtime_pay = $amount * $diff;
+
+    Log::info($overtime_pay);
+    Log::info($diff);
+    Log::info($amount);
+
+    $this->form->fill(['amount' => number_format($overtime_pay)]);
+
+    // Log::info($this->form->start_time);
+    // Log::info($this->form->end_time);
+    // Log::info($this->form->overtime_type);
 };
 
 ?>
@@ -178,11 +210,11 @@ $submit_split = function (){
                         <div class="col-12">
                             <div class="form-group">
                                 <label>Jenis Lembur</label>
-                                <select wire:model="form.overtime_type" class="form-control custom-select @error('form.overtime_type') is-invalid @enderror" >
+                                <select wire:change="handle_change_time" wire:model="form.overtime_type" class="form-control custom-select @error('form.overtime_type') is-invalid @enderror" >
                                     <option value="" >-- Pilih Lembur --</option>
-                                    <option value="Tanggal Merah" >Lembur Tanggal Merah</option>
-                                    <option value="Biasa" >Lembur Biasa</option>
-                                    <option value="Fix" >Lembur Fix</option>
+                                    @foreach ($overtimeMaster as $item)
+                                    <option value="{{ $item->id }}" >{{ $item->name }}</option>
+                                    @endforeach
                                 </select>
                                 @error('form.overtime_type')
                                     <span class="invalid-feedback" >{{ $message }}</span>
@@ -192,7 +224,7 @@ $submit_split = function (){
                         <div class="col-6">
                             <div class="form-group">
                                 <label>Mulai Lembur</label>
-                                <input wire:model="form.start_time" type="time" class="form-control  @error('form.start_time') is-invalid @enderror">
+                                <input wire:change="handle_change_time" wire:model="form.start_time" type="time" class="form-control  @error('form.start_time') is-invalid @enderror">
                                 @error('form.start_time')
                                     <span class="invalid-feedback" >{{ $message }}</span>
                                 @enderror
@@ -201,7 +233,7 @@ $submit_split = function (){
                         <div class="col-6">
                             <div class="form-group">
                                 <label>Akhir Lembur</label>
-                                <input wire:model="form.end_time" type="time" class="form-control  @error('form.end_time') is-invalid @enderror">
+                                <input wire:change="handle_change_time" wire:model="form.end_time" type="time" class="form-control  @error('form.end_time') is-invalid @enderror">
                                 @error('form.end_time')
                                     <span class="invalid-feedback" >{{ $message }}</span>
                                 @enderror
@@ -210,7 +242,7 @@ $submit_split = function (){
                         <div class="col-12">
                             <div class="form-group">
                                 <label>Bayaran Lembur</label>
-                                <input wire:model="form.amount" type="number" min="0" readonly class="form-control form-control-solid">
+                                <input wire:model="form.amount" type="text" min="0" readonly class="form-control form-control-solid">
                             </div>
                         </div>
                     </div>

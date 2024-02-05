@@ -2,24 +2,44 @@
 
 use function Laravel\Folio\{name,middleware};
 use function Livewire\Volt\{state, mount}; 
+use App\Models\MonthlySalary;
 use App\Models\Employee;
+use App\Models\Attendance;
 use App\Models\WorkSchedule;
 
 middleware(['auth']);
 name('human-resource.monthly-salary.all');
-state(['employee', 'base_salary', 'total_revenue', 'attendance_detail']);
+state(['employee', 'base_salary', 'total_revenue', 'attendance_detail', 'attendances']);
 
-mount(function (Employee $employee){
-    $this->employee = $employee;
+mount(function ($id){
 
-    $attendances = $employee->attendance()
-                ->whereMonth('created_at', \Carbon\Carbon::now())
-                ->whereYear('created_at', \Carbon\Carbon::now())
+    $monthlySalary = MonthlySalary::find($id);
+
+    $this->employee = Employee::find($monthlySalary->employee_id);
+
+    $this->attendances = WorkSchedule::whereBetween('date', [$monthlySalary->start_date, $monthlySalary->end_date])
+                ->join('counters', 'counters.id', '=', 'work_schedules.counter_id')
+                ->leftJoin('attendances', DB::raw('DATE(attendances.created_at)'), '=', 'work_schedules.date')
+                ->leftJoin('overtimes', 'overtimes.attendance_id', '=', 'attendances.id')
+                ->where('work_schedules.employee_id', $this->employee->id)
+                ->orderBy('work_schedules.date')
+                ->select(
+                    'work_schedules.id',
+                    'work_schedules.date',
+                    'counters.name as counter',
+                    'attendances.id as attendance_id',
+                    'attendances.is_late as late',
+                    'overtimes.start_time as overtime_start',
+                    'overtimes.end_time as overtime_end',
+                    'attendances.deduction as deduction',
+                )
                 ->get();
+
+    Log::info(json_decode($this->attendances));
 
     $work_schedules = WorkSchedule::whereMonth('date', \Carbon\Carbon::now())
                 ->whereYear('date', \Carbon\Carbon::now())
-                ->where('employee_id',$employee->id)
+                ->where('employee_id',$this->employee->id)
                 ->get()->toArray();
 
 
@@ -191,17 +211,33 @@ mount(function (Employee $employee){
                                     <th style="vertical-align: middle;" class=" text-center" scope="col" >
                                         Status
                                     </th>
+                                    <th style="vertical-align: middle;" class=" text-center" scope="col" >
+                                        Terlambat
+                                    </th>
+                                    <th style="vertical-align: middle;" class=" text-center" scope="col" >
+                                        Lembur
+                                    </th>
+                                    <th style="vertical-align: middle;" class=" text-center" scope="col" >
+                                        Split
+                                    </th>
                                     <th class=" text-center" scope="col" >
                                         Potongan
                                     </th>
                                     <th style="vertical-align: middle;" >Aksi</th>
                                 </tr>
                                 <tbody class="text-center" >
-                                    @foreach ($employee->currentMonthAttendance as $i => $attendance)
+                                    @foreach ($attendances as $i => $attendance)
                                         <tr>
                                             <td style="vertical-align: middle;" >{{ $i+1 }}</td>
-                                            <td style="vertical-align: middle;" >{{ \Carbon\Carbon::parse($attendance->created_at)->translatedFormat('d m Y') }}</td>
+                                            <td style="vertical-align: middle;" >{{ \Carbon\Carbon::parse($attendance->date)->translatedFormat('d F Y') }}</td>
+                                            <td style="vertical-align: middle;" >{{ $attendance->counter }}</td>
+                                            <td style="vertical-align: middle;" >{{ $attendance->attendance_id ? 'Hadir' : 'Tidak Hadir' }}</td>
+                                            <td style="vertical-align: middle;" >{{ (boolean)$attendance->late ? 'Terlambat' : '' }}</td>
+                                            <td style="vertical-align: middle;" >{{ $attendance->overtime_start . ' - '. $attendance->overtime_end }}</td>
                                             {{-- <td style="vertical-align: middle;" >{{ $attendance-> }}</td> --}}
+                                            <td style="vertical-align: middle;" >{{ $attendance->deduction }}</td>
+                                            <td style="vertical-align: middle;" >{{ $attendance->deduction }}</td>
+                                            <td style="vertical-align: middle;" >{{ $attendance->deduction }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
