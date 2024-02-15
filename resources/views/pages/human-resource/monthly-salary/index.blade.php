@@ -84,8 +84,7 @@ $count_salary = function (){
 
         $totalOvertime = $attendance->reduce(function($curr, $item){
             return $curr + $item['amount'] ?? 0;
-        });
-        
+         });
 
         $totalSalary = $salary->base_salary - $totalDeduction + $totalOvertime + $total_split;
 

@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CalculateSalary;
+use App\Console\Commands\CheckAttendance;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +17,8 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        // $schedule->command(CalculateSalary::class)->everyFiveMinutes();
+        $schedule->command(CheckAttendance::class)->everyFiveSeconds();
+        $schedule->command(CalculateSalary::class)->everyFiveSeconds();
 
     }
 
