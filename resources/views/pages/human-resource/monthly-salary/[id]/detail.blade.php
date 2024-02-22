@@ -122,14 +122,14 @@ mount(function ($id){
                                 </tr>
                             </table>
                             <div class="d-flex" style="margin-top: 40px;" >
-                                <table style="width: 50%;" >
+                                <table style="width: 50%;" class="table-striped" >
                                     <thead>
                                         <tr>
                                             <td colspan="2" style="font-weight: 600; font-size: 16px; width: 50%;" >Insentif</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="bg-light" style="height: 33px;" >
+                                        <tr style="height: 33px;" >
                                             <td>Kehadiran</td>
                                             <td style="text-align: end; padding-right: 10px;" >Rp 210,000</td>
                                         </tr>
@@ -137,7 +137,7 @@ mount(function ($id){
                                             <td>Transport</td>
                                             <td style="text-align: end; padding-right: 10px;" >Rp 50,000</td>
                                         </tr>
-                                        <tr class="bg-light" style="height: 33px;" >
+                                        <tr style="height: 33px;" >
                                             <td>Split</td>
                                             <td style="text-align: end; padding-right: 10px;" >Rp 150,000</td>
                                         </tr>
@@ -145,7 +145,7 @@ mount(function ($id){
                                             <td></td>
                                             <td style="text-align: end; padding-right: 10px;" ></td>
                                         </tr>
-                                        <tr class="bg-light" style="height: 33px;" >
+                                        <tr style="height: 33px;" >
                                             <td></td>
                                             <td style="text-align: end; padding-right: 10px;" ></td>
                                         </tr>
@@ -159,7 +159,7 @@ mount(function ($id){
                                         <td></td>
                                     </tr>
                                 </table>
-                                <table style="width: 50%; height: fit-content;" >
+                                <table class="table-striped" style="width: 50%; height: fit-content;" >
                                     <thead>
                                         <tr>
                                             <td colspan="2" style="font-weight: 600; font-size: 16px; width: 50%;" >Insentif</td>
@@ -167,13 +167,13 @@ mount(function ($id){
                                     </thead>
                                     <tbody>
                                         @foreach ($overtime_summary as $i => $item)
-                                            <tr class="@if($i % 2 == 0) bg-light @endif" style="height: 33px;" >
+                                            <tr style="height: 33px;" >
                                                 <td>{{ $item->name }}</td>
                                                 <td style="text-align: end; padding-right: 10px;" >Rp {{ number_format($item->total) }}</td>
                                             </tr>
                                         @endforeach
                                         @for ($i = 0; $i < 5 - count($overtime_summary); $i++)
-                                        <tr class="@if($i % 2 != 0) bg-light @endif" style="height: 33px;" >
+                                        <tr  style="height: 33px;" >
                                             <td></td>
                                             <td style="text-align: end; padding-right: 10px;" ></td>
                                         </tr>
@@ -187,14 +187,14 @@ mount(function ($id){
                             </div>
 
                             <div class="d-flex" style="margin-top: 20px;" >
-                                <table style="width: 50%; height: fit-content;" >
+                                <table style="width: 50%; height: fit-content;" class="table-striped" >
                                     <thead>
                                         <tr>
                                             <td colspan="2" style="font-weight: 600; font-size: 16px; width: 50%;" >Potongan</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="bg-light" style="height: 33px;" >
+                                        <tr style="height: 33px;" >
                                             <td>Terlambat</td>
                                             <td style="text-align: end; padding-right: 10px;" >Rp {{ number_format($deduction_total) }}</td>
                                         </tr>
@@ -202,20 +202,20 @@ mount(function ($id){
                                             <td>Denda</td>
                                             <td style="text-align: end; padding-right: 10px;" >Rp 0</td>
                                         </tr>
-                                        <tr class="bg-light" style="height: 33px;" >
+                                        <tr style="height: 33px;" >
                                             <td>Absen</td>
                                             <td style="text-align: end; padding-right: 10px;" >Rp 0</td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <table style="width: 50%;" >
+                                <table style="width: 50%;" class="table-striped" >
                                     <thead>
                                         <tr>
                                             <td colspan="2" style="font-weight: 600; font-size: 16px; width: 50%; color: transparent;" >-</td>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="bg-light" style="height: 33px;" >
+                                        <tr style="height: 33px;" >
                                             <td></td>
                                             <td style="text-align: end; padding-right: 10px;" ></td>
                                         </tr>
@@ -223,7 +223,7 @@ mount(function ($id){
                                             <td></td>
                                             <td style="text-align: end; padding-right: 10px;" ></td>
                                         </tr>
-                                        <tr class="bg-light" style="height: 33px;" >
+                                        <tr style="height: 33px;" >
                                             <td></td>
                                             <td style="text-align: end; padding-right: 10px;" ></td>
                                         </tr>
@@ -239,7 +239,7 @@ mount(function ($id){
                                 </table>
                             </div>
 
-                            <table style="margin-top: 120px; width: 100%;" >
+                            <table style="margin-top: 120px; width: 100%;" class="table-striped" >
                                 <tr>
                                     <td style="padding: 0 20px;" >
                                         <div style="border-bottom: 1px solid black;" ></div>

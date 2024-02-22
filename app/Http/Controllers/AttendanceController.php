@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Attendance;
 use App\Models\Employee;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -48,32 +49,26 @@ class AttendanceController extends Controller
         }
     }
 
-    public function update(Request $request){
+    
+    public function update(Attendance $attendance,Request $request){
 
-        DB::beginTransaction();
+        $val = $request->value;
+
+        if($request->value == 'true' || $request->value == 'false'){
+            $val = $request->value == 'true';
+        }
 
         try {
-
-            foreach($request->attendances as $attendance){
-
-                Attendance::find($attendance[0])->update([
-                    'attendance_time' => $attendance[3],
-                    'attendance_time_out' => $attendance[4],
-                    'is_late' => $attendance[1],
-                    'deduction' => $attendance[7],
-                ]);
-            }
-
-            DB::commit();
-
+            $attendance->update([
+                $request->field => $val
+            ]);
             return response()->json([
                 'success' => true,
             ]);
-
         } catch (\Throwable $th) {
-            DB::rollBack();
             throw $th;
         }
+
 
     }
 

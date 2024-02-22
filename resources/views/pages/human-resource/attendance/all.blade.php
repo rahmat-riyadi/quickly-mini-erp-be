@@ -10,6 +10,8 @@ name('human-resource.attendance.all');
 state([
     'list_of_employees' => [],
     'selected_employee' => null,
+    'start_date' => \Carbon\Carbon::now()->startOfMonth()->format('Y-m-d'),
+    'end_date' => \Carbon\Carbon::now()->endOfMonth()->format('Y-m-d')
 ]);
 
 mount(function (){
@@ -17,9 +19,10 @@ mount(function (){
 });
 
 
-$get_employee = function ($id){
-    $this->selected_employee = $id;
+$get_employee = function (){
     $data = Attendance::latest()
+    ->where('employee_id', $this->selected_employee)
+    ->whereBetween('created_at', [$this->start_date, $this->end_date])
     ->select(
         'id',
         'employee_id',
@@ -27,7 +30,6 @@ $get_employee = function ($id){
         'location',
         'image',
         'is_late',
-        DB::raw("(CASE WHEN is_late = 1 THEN 'Ya' ElSE 'Tidak' END) as formatted_late"),
         DB::raw("DATE_FORMAT(created_at, '%d/%m/%Y') as date"),
         DB::raw("TIME_FORMAT(attendance_time, '%H:%i') as attendance_time"),
         DB::raw("TIME_FORMAT(attendance_time_out, '%H:%i') as attendance_time_out"),
@@ -43,26 +45,49 @@ $get_salaries = function (){
     $this->dispatch('loadData', $data);
 };
 
-on(['getEmployee' => 'get_employee']);
+on(['set-employee' => function ($val){
+    $this->selected_employee = $val;
+}]);
 
 ?>
 
 <x-layouts.app subheaderTitle="Absensi" >
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
     @volt
     <div class="container">
-
         <div class="row">
             <div class="col">
                 <div class="card card-custom">
                     <div class="card-body p-4">
-                        <div wire:ignore class="form-group m-0">
-                            <label style="display: block;" >Pegawai </label>
-                            <select wire:model="item" class="form-control" style="width: 100%;" id="select_2" >
-                                <option value="">-- Pilih Pegawai --</option>
-                                @foreach ($list_of_employees as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
+                        <div class="row">
+                            <div class="col">
+                                <div wire:ignore class="form-group m-0">
+                                    <label style="display: block;" >Pegawai </label>
+                                    <select wire:model="item" class="form-control" style="width: 100%;" id="select_2" >
+                                        <option value="">-- Pilih Pegawai --</option>
+                                        @foreach ($list_of_employees as $item)
+                                        <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group m-0">
+                                    <label>Tanggal Mulai </label>
+                                    <input wire:model="start_date" type="date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-group m-0">
+                                    <label>Tanggal Mulai </label>
+                                    <input  wire:model="end_date"type="date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-2 align-self-end">
+                                <button wire:click="get_employee" type="button" class="btn btn-primary btn-block" >
+                                    Cari
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -72,18 +97,19 @@ on(['getEmployee' => 'get_employee']);
 
         <div class="card card-custom mt-6">
             <div wire:ignore class="card-body">
-                <div id="excel-container"></div>
-            </div>
-            <div class="card-footer text-right">
-                <button type="button" class="btn btn-primary save" >
-                    Simpan
-                </button>
+                {{-- <div id="excel-container"></div> --}}
+                <div id="myGrid" class="ag-theme-alpine" style="height: 450px"></div>
             </div>
         </div>
+        {{-- <div class="d-flex justify-content-end mt-3">
+            <button type="button" class="btn btn-primary save" >
+                Simpan
+            </button>
+        </div> --}}
 
     </div>
 
-    <script>
+    {{-- <script>
 
         document.addEventListener('livewire:navigated', () => {
 
@@ -268,7 +294,134 @@ on(['getEmployee' => 'get_employee']);
         })
 
 
-    </script>
-
+    </script> --}}
     @endvolt
+    <script>
+
+        function deleteData(id){
+
+            const isDelete = confirm("apakah ingin mengaapus?")
+
+            if(isDelete){
+                $.ajax({
+                    url: '/human-resource/attendance/delete/' + id,
+                    type: 'delete',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: res => console.log(res),
+                    error: err => console.log(err),
+                })
+            }
+            return
+        }
+
+        var instance
+
+        const gridOptions = {
+            // Row Data: The data to be displayed.
+            rowData: [],
+            columnDefs: [
+                { 
+                    field: "date", 
+                    headerName: 'Tanggal', 
+                    pinned: 'left', 
+                    cellDataType: 'date',
+                },
+                { field: "attendance_time", headerName: 'Waktu Masuk', width: 140 },
+                { field: "attendance_time_out", headerName: 'Waktu Keluar', width: 140 },
+                { 
+                    field: "is_late", 
+                    headerName: 'Terlambat', 
+                    width: 120, 
+                    editable: true,
+                },
+                { field: "deduction", headerName: 'potongan', width: 120, editable: true },
+                { field: "location", headerName: 'Lokasi', width: 300 },
+                { 
+                    field: "id", 
+                    headerName: 'Aksi',
+                    pinned: 'right',
+                    width: 160,
+                    cellRenderer: params => {
+                        return `
+                        <a href="" class="btn btn-sm btn-primary" >Detail</a>
+                        <button onclick="deleteData(${params.value})" class="btn btn-sm btn-danger" >Hapus</button>
+                        `
+                    }
+                },
+            ],
+            getRowId: (params) => params.data.id,
+            readOnlyEdit: true,
+            onCellEditRequest: event => {
+                console.log(event);
+                const oldData = event.data;
+                const field = event.colDef.field;
+                const newValue = event.newValue;
+                const newData = { ...oldData };
+                $.ajax({
+                    url: "/human-resource/attendance/update/" + event.data.id,
+                    method: 'POST',
+                    data: {
+                        field: event.colDef.field,
+                        value: event.newValue
+                    }, 
+                    success: res => {
+                        console.log(res)
+                        newData[field] = event.newValue
+                        const tx = {
+                            update: [newData],
+                        };
+                        const rowNode = instance.getRowNode(event.data.id);
+                        rowNode.setData({ ...newData })
+                    },
+                    error: res => {
+                        const rowNode = instance.getRowNode(event.data.id);
+                        rowNode.setData({ ...oldData })
+                        console.log(res)
+                        alert('Gagal Mengubah data')
+                    }
+                })
+            }
+        };
+
+        // Your Javascript code to create the grid
+        const myGridElement = document.querySelector('#myGrid');
+        instance = agGrid.createGrid(myGridElement, gridOptions);
+
+        window.addEventListener('livewire:navigated', () => {
+
+            $('#select_2').select2({
+                placeholder: "Pilih Pegawai"
+            });
+            
+            $('#select_2').on('change', (e) => {
+                Livewire.dispatch('set-employee', { val: e.target.value})
+            })
+
+            Livewire.on('loadData', ([ data ]) => {
+                instance.setGridOption(
+                    'rowData',
+                    data.map(row => {
+                        const dateParts = row.date.split('/')
+                        console.log(new Date(
+                                parseInt(dateParts[2]),
+                                parseInt(dateParts[1]) - 1,
+                                parseInt(dateParts[0])
+                            ))
+                        return {
+                            ...row,
+                            is_late: row.is_late == 1,
+                            date: new Date(
+                                parseInt(dateParts[2]),
+                                parseInt(dateParts[1]) - 1,
+                                parseInt(dateParts[0])
+                            ),
+                        }
+                    })
+                )
+            })  
+        })
+
+    </script>
 </x-layouts.app>

@@ -454,6 +454,14 @@
                                                     <span class="menu-text">Data Master Lembur</span>
                                                 </a>
                                             </li>
+                                            <li class="menu-item @if(Route::currentRouteName() == 'human-resource.monthly-salary.input') menu-item-active @endif" aria-haspopup="true">
+                                                <a href="/human-resource/monthly-salary/overtime" wire:navigate.hover class="menu-link">
+                                                    <i class="menu-bullet menu-bullet-dot">
+                                                        <span></span>
+                                                    </i>
+                                                    <span class="menu-text">Input Upah</span>
+                                                </a>
+                                            </li>
                                         </ul>
                                     </div>
                                 </li>
