@@ -129,44 +129,10 @@ $count_salary = function (){
     <div class="container">
 
         {{-- {{ dd($employees) }} --}}
-
-        <form wire:submit="count_salary">
-            <div class="card card-custom mb-6">
-                <div class="card-body p-4">
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group m-0">
-                                <label style="display: block;" >Tanggal Mulai </label>
-                                <input wire:model="start_date" type="date" class="form-control @error('start_date') is-invalid @enderror" >
-                                @error('end_date')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group m-0">
-                                <label style="display: block;" >Tanggal Akhir </label>
-                                <input  wire:model="end_date" type="date" class="form-control @error('end_date') is-invalid @enderror" >
-                                @error('end_date')
-                                    <span class="invalid-feedback">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-2 align-self-end">
-                            <button type="submit" class="btn btn-primary btn-block">
-                                Akumulasi
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-
         <div class="card card-custom">
             <div class="card-header flex-wrap border-0 pt-6 pb-0">
                 <div class="card-title">
-                    <h3 class="card-label">Daftar Upah Bulanan</h3>
+                    <h3 class="card-label">Daftar Upah Bulanan - {{ \Carbon\Carbon::now()->translatedFormat('F (m)') }}</h3>
                 </div>
                 <div class="card-toolbar">
                     <!--begin::Dropdown-->

@@ -29,6 +29,7 @@
 
 
 		</script>		
+		@livewireStyles
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,6 +18,10 @@ class Employee extends Authenticatable
         'created_at',
         'updated_at',
     ];
+
+    public function montlySalary(){
+
+    }
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -37,7 +40,7 @@ class Employee extends Authenticatable
     }
     
     public function currentSalary(){
-        return $this->hasOne(Salary::class)->latest();
+        return $this->hasOne(Salary::class, 'employee_id')->latest();
     }
 
     public function currentMonthAttendance(){

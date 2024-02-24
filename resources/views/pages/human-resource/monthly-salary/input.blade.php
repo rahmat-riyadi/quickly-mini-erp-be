@@ -4,33 +4,35 @@ use function Livewire\Volt\{state, mount, on, updated, form};
 use App\Models\Employee;
 use App\Models\Attendance;
 use App\Models\WorkSchedule;
+use App\Models\MonthlySalary;
 use App\Livewire\Forms\MonthlySalaryForm;
 middleware(['auth']);
 name('human-resource.monthly-salary.input');
-state(['employees', 'year', 'month', 'employee', 'base_salary', 'attendance_insentive', 'split', 'transport']);
+
+state(['employees', 'employee', 'base_salary', 'attendance_insentive', 'split', 'transport', 'is_update']);
 
 form(MonthlySalaryForm::class);
 
 mount(function (){
     $this->employees = Employee::all();
-    $this->year = \Carbon\Carbon::now()->format('Y');
+    $this->form->year = \Carbon\Carbon::now()->format('Y');
 });
 
 $get_employee = function () {
 
+    $this->form->reset(['thr', 'split', 'total_salary', 'salary_deduction', 'fine']);
+
     $this->validate([
         'employee' => 'required',
-        'month' => 'required',
-        'year' => 'required'
+        'form.month' => 'required',
+        'form.year' => 'required'
     ],[
-        'month.required' => 'Bulan harus diisi',
-        'year.required' => 'Tahun harus diisi',
         'employee.required' => 'Pegawai harus diisi'
     ]);
 
     $data = WorkSchedule::where('work_schedules.employee_id',$this->employee->id)
-    ->whereYear('work_schedules.created_at', $this->year)
-    ->whereMonth('work_schedules.created_at', $this->month)
+    ->whereYear('work_schedules.created_at', $this->form->year)
+    ->whereMonth('work_schedules.created_at', $this->form->month)
     ->join('counters as att_c', 'att_c.id', '=', 'work_schedules.counter_id')
     ->leftJoin('attendances', DB::raw('DATE(attendances.created_at)'), '=', 'work_schedules.date')
     ->leftJoin('splits', function ($q){
@@ -64,19 +66,38 @@ $get_employee = function () {
     )
     ->get();
 
-    $this->form->overtime_pay = $data->reduce(function ($prev, $curr){
+    $this->dispatch('load-data',$data);
+
+    $monthlySalary = MonthlySalary::whereMonth('created_at', $this->form->month)
+    ->whereYear('created_at', $this->form->year)
+    ->where('employee_id', $this->employee->id)->first();
+
+    if(!empty($monthlySalary)){
+        $this->form->setModel($monthlySalary);
+        $this->is_update = true;
+        return;
+    }
+
+    $this->is_update = false;
+
+    $overtime_pay = $data->reduce(function ($prev, $curr){
         return $curr->overtime_salary ?? 0 + $prev;
     }, 0);
 
-    $this->form->salary_deduction = $data->reduce(function ($prev, $curr){
+    $this->form->overtime_pay = number_format($overtime_pay);
+
+    $salary_deduction = $data->reduce(function ($prev, $curr){
         return $curr->deduction ?? 0 + $prev;
     }, 0);
 
-    $this->dispatch('load-data',$data);
+    $this->form->salary_deduction = number_format($salary_deduction);
+
+    $this->form->total_salary = $this->base_salary + $overtime_pay - $salary_deduction;
 
 };
 
 $set_employee = function ($id){
+    $this->form->employee = Employee::find($id);
     $this->employee = Employee::find($id);
     $salary =  $this->employee->currentSalary;
     $this->base_salary = $salary->base_salary;
@@ -85,12 +106,34 @@ $set_employee = function ($id){
     $this->transport = $salary->transport;
 };
 
-on(['set-employee' => 'set_employee'])
+on(['set-employee' => 'set_employee']);
+
+updated([
+    'form.split' => fn() => $this->count(),
+    'form.thr' => fn() => $this->count(),
+    'form.bonus' => fn() => $this->count(),
+    'form.salary_deduction' => fn() => $this->count(),
+    'form.salary_deduction' => fn() => $this->count(),
+    'form.overtime_pay' => fn() => $this->count(),
+    'form.fine' => fn() => $this->count(),
+]);
+
+$submit = function (){
+    try {
+        $this->form->store();
+        $this->dispatch('notify', 'success', 'Data berhasil disimpan');
+    } catch (\Throwable $th) {
+        $this->dispatch('notify', 'error', $th->getMessage());
+    }
+};
+
+$count = function (){
+    $this->form->total_salary = $this->base_salary + floatval(str_replace(',', '',$this->form->overtime_pay)) - floatval(str_replace(',', '',$this->form->salary_deduction)) - floatval(str_replace(',', '',$this->form->fine)) + floatval(str_replace(',', '',$this->form->split)) + floatval(str_replace(',', '',$this->form->bonus)) + floatval(str_replace(',', '',$this->form->thr));
+};
 
 ?>
 
 <x-layouts.app subheaderTitle="Input Data Upah" >
-    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
     @volt
     <div class="container" >
         <form wire:submit="get_employee">
@@ -114,7 +157,7 @@ on(['set-employee' => 'set_employee'])
                         <div class="col-3">
                             <div class="form-group m-0">
                                 <label>Tahun </label>
-                                <input wire:model="year" type="number" class="form-control @error('year') is-invalid @enderror">
+                                <input wire:model="form.year" type="number" class="form-control @error('year') is-invalid @enderror">
                                 @error('year')
                                 <span class="invalid-feedback" >{{ $message }}</span>
                                 @enderror
@@ -123,7 +166,7 @@ on(['set-employee' => 'set_employee'])
                         <div class="col-3">
                             <div class="form-group m-0">
                                 <label>Bulan </label>
-                                <select wire:model="month" class="form-control @error('month') is-invalid @enderror" >
+                                <select wire:model="form.month" class="form-control @error('month') is-invalid @enderror" >
                                     <option value="">-- Pilih Bulan --</option>
                                     @foreach (['Januari', 'Februari', 'Maret', 'April', 'Maret', 'Juni', 'July', 'Agustus', 'September', 'Oktober', 'November', 'Desember'] as $i => $item)
                                     <option value="{{ $i+1 }}">{{ $item }}</option>
@@ -151,87 +194,103 @@ on(['set-employee' => 'set_employee'])
             </div>
         </div>
 
-        <div class="card card-custom">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="">Split</label>
-                            <input value="Rp. {{ number_format($split) }}" type="text" class="form-control form-control-solid" readonly >
+        <form wire:submit="submit">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="">Split</label>
+                                <input value="Rp. {{ number_format($split) }}" type="text" class="form-control form-control-solid" readonly >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="">Transport</label>
-                            <input value="Rp. {{ number_format($transport) }}" type="text" class="form-control form-control-solid" readonly >
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="">Transport</label>
+                                <input value="Rp. {{ number_format($transport) }}" type="text" class="form-control form-control-solid" readonly >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="">Insentive Kehadiran</label>
-                            <input value="Rp. {{ number_format($attendance_insentive) }}" type="text" class="form-control form-control-solid" readonly >
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="">Insentive Kehadiran</label>
+                                <input value="Rp. {{ number_format($attendance_insentive) }}" type="text" class="form-control form-control-solid" readonly >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label for="">Gaji Pokok</label>
-                            <input value="Rp. {{ number_format($base_salary) }}" type="text" class="form-control form-control-solid" readonly >
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="">Gaji Pokok</label>
+                                <input value="Rp. {{ number_format($base_salary) }}" type="text" class="form-control form-control-solid" readonly >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="">Uang Lembur</label>
-                            <input wire:model="form.overtime_pay" type="number" class="form-control"  >
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="">Uang Lembur</label>
+                                <input x-mask:dynamic="$money($input)" wire:model.live="form.overtime_pay" type="text" class="form-control"  >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="">Split</label>
-                            <input wire:model="form.split" type="number" class="form-control"  >
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="">Split</label>
+                                <input x-mask:dynamic="$money($input)" wire:model.live="form.split" min="0" type="text" class="form-control"  >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="">Potongan</label>
-                            <input wire:model="form.salary_deduction" type="number" class="form-control"  >
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="">Potongan Terlambat</label>
+                                <input x-mask:dynamic="$money($input)" wire:model.live="form.salary_deduction" type="text" class="form-control"  >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4 ">
-                        <div class="form-group">
-                            <label for="">Bonus</label>
-                            <input wire:model="form.bonus" type="number" class="form-control"  >
+                        <div class="col-4 ">
+                            <div class="form-group">
+                                <label for="">Bonus</label>
+                                <input x-mask:dynamic="$money($input)" wire:model.live="form.bonus" type="text" class="form-control"  >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label for="">THR</label>
-                            <input wire:model="form.thr" type="number" class="form-control"  >
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="">THR</label>
+                                <input x-mask:dynamic="$money($input)" wire:model.live="form.thr" type="text" class="form-control"  >
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-4"></div>
-                    <div class="col-5 offset-7">
-                        <div class="form-group row">
-                            <label class="col-3 align-self-center mb-0" for="">Gaji Bersih</label>
-                            <div class="col" >
-                                <input type="text" class="form-control"  >
+                        <div class="col-4">
+                            <div class="form-group">
+                                <label for="">Denda</label>
+                                <input x-mask:dynamic="$money($input)" wire:model.live="form.fine" type="text" class="form-control"  >
+                            </div>
+                        </div>
+                        <div class="col-5 offset-7">
+                            <div class="form-group row">
+                                <label class="col-3 align-self-center mb-0" for="">Gaji Bersih</label>
+                                <div class="col" >
+                                    <input readonly value="{{ number_format($this->form->total_salary) }}" type="text" class="form-control form-control-solid"  >
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="d-flex justify-content-end mt-4">
-            <button type="submit" class="btn btn-primary mr-4">
-                Simpan
-            </button>
-            <a href="/master-data/counter" wire:navigate class="btn btn-secondary">Kembali</a>
-        </div>
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary mr-4">
+                    Simpan
+                </button>
+                <a href="/master-data/counter" wire:navigate class="btn btn-secondary">Kembali</a>
+            </div>
+        </form>
     </div>
-    @endvolt
 
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+    @script
     <script>
 
-        var instance
+        Livewire.on('notify', ([ type, message ]) => {
+            Swal.fire({
+                icon: type,
+                title: type == 'success' ? 'Berhasil' : 'Gagal',
+                text: message,
+                showConfirmButton: false,
+                timer: 1500
+            })
+        })
 
         const gridOptions = {
             rowData: [],
@@ -285,58 +344,53 @@ on(['set-employee' => 'set_employee'])
         }
 
         const myGridElement = document.querySelector('#myGrid');
-        instance = agGrid.createGrid(myGridElement, gridOptions);
+        var instance = agGrid.createGrid(myGridElement, gridOptions);
 
-        window.addEventListener('livewire:navigated', () => {
-        
-            $('#select_2').select2({
-                placeholder: "Pilih Pegawai"
-            });
-        
-            $('#select_2').on('change', (e) => {
-                Livewire.dispatch('set-employee', { id: e.target.value})
-            })
-        
-            Livewire.on('load-data', ([ data ]) => {
-                console.log(data)
-        
-                var newData = data.map(e => {
+        $('#select_2').select2({
+            placeholder: "Pilih Pegawai"
+        });
+    
+        $('#select_2').on('change', (e) => {
+            Livewire.dispatch('set-employee', { id: e.target.value})
+        })
+    
+        Livewire.on('load-data', ([ data ]) => {
+    
+            var newData = data.map(e => {
 
-                    var overtimeDifference = 0
-        
-                    const date = new Date(e.date)
+                var overtimeDifference = 0
+    
+                const date = new Date(e.date)
 
-                    return {
-                        ...e,
-                        late: e.late == 1,
-                        date
-                    }
-        
-                })
-
-                const sumData = {
-                    overtime_salary: newData.reduce((prev, curr) => {
-                        return curr.overtime_salary + prev
-                    }, 0),
-                    counter_split: newData.reduce((prev, curr) => {
-                        if(curr.counter_split){
-                            return prev + 1
-                        }
-                        return prev + 0
-                    }, 0),
-                    deduction: newData.reduce((prev, curr) => {
-                        return curr.deduction + prev
-                    }, 0)
+                return {
+                    ...e,
+                    late: e.late == 1,
+                    date
                 }
-
-                instance.setGridOption('rowData',newData)
-                instance.setGridOption('pinnedBottomRowData',[ sumData ])
-        
+    
             })
+
+            const sumData = {
+                overtime_salary: newData.reduce((prev, curr) => {
+                    return curr.overtime_salary + prev
+                }, 0),
+                counter_split: newData.reduce((prev, curr) => {
+                    if(curr.counter_split){
+                        return prev + 1
+                    }
+                    return prev + 0
+                }, 0),
+                deduction: newData.reduce((prev, curr) => {
+                    return curr.deduction + prev
+                }, 0)
+            }
+
+            instance.setGridOption('rowData',newData)
+            instance.setGridOption('pinnedBottomRowData',[ sumData ])
         
         })
     </script>
+    @endscript
+    @endvolt
 
-    <script>
-    </script>
 </x-layouts.app>
