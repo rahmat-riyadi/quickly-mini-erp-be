@@ -345,7 +345,7 @@ on(['set-employee' => function ($val){
                     width: 160,
                     cellRenderer: params => {
                         return `
-                        <a href="" class="btn btn-sm btn-primary" >Detail</a>
+                        <a href="/human-resource/attendance/detail/${params.value}" class="btn btn-sm btn-primary" >Detail</a>
                         <button onclick="deleteData(${params.value})" class="btn btn-sm btn-danger" >Hapus</button>
                         `
                     }

@@ -67,7 +67,7 @@ $submit = function () {
 						<!--end: Aside content-->
 						<!--begin: Aside footer for desktop-->
 						<div class="d-none flex-column-auto d-lg-flex justify-content-between mt-10">
-							<div class="opacity-70 font-weight-bold text-white">© 2020 Rumah Sampah</div>
+							<div class="opacity-70 font-weight-bold text-white">© 2020 PT. Lingkar Celebes Abadi</div>
 						</div>
 						<!--end: Aside footer for desktop-->
 					</div>

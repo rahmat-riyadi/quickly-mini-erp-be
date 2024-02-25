@@ -116,7 +116,8 @@ class AttendanceController extends Controller
         ->whereNull('attendance_time_out')
         ->first()
         ->update([
-            'attendance_time_out' => Carbon::now()
+            'attendance_time_out' => Carbon::now(),
+            'status' => 'Selesai Bekerja'
         ]);
 
         return $this->response(

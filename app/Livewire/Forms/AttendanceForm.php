@@ -73,7 +73,9 @@ class AttendanceForm extends Form
         ]);
 
         $workSchedule = WorkSchedule::where('employee_id', $this->employee->id)
-                        ->where('date', Carbon::now()->format('Y-m-d'))
+                        ->whereMonth('date', $attendance->created_at)
+                        ->whereDate('date', $attendance->created_at)
+                        ->whereYear('date', $attendance->created_at)
                         ->first();
 
         $timeIn = Carbon::parse($workSchedule->time_in);
