@@ -51,7 +51,7 @@ class Employee extends Authenticatable
     public function currentWeekSchedule(){
         return $this->hasMany(WorkSchedule::class)->whereBetween('date', [
             Carbon::now()->startOfWeek(),
-            Carbon::now()->endOfWeek(),
+            Carbon::now()->addWeek()->endOfWeek(),
         ]);
     }
 
