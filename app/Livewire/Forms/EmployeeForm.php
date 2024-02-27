@@ -11,7 +11,7 @@ class EmployeeForm extends Form
 {
 
 
-    public function __construct()
+    public function boot()
     {
         $this->status = 1;
     }
