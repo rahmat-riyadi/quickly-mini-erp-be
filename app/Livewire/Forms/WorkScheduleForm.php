@@ -11,7 +11,7 @@ use Livewire\Form;
 class WorkScheduleForm extends Form
 {
 
-    public function __construct()
+    function boot()
     {
         $this->startWeek = Carbon::now()->startOfWeek();
         $this->endWeek = Carbon::now()->endOfWeek();
