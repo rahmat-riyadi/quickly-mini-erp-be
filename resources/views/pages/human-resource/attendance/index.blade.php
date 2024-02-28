@@ -24,7 +24,7 @@ with(fn()=> [
         $q->where('name', "LIKE", "%{$this->keyword}%");
     })
     ->select(
-        'employees.id',
+        DB::raw('DISTINCT(employees.id)'),
         'employees.name',
         'attendances.status',
         'attendances.is_late',
