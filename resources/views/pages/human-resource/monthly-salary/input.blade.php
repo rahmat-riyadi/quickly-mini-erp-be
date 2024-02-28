@@ -9,7 +9,7 @@ use App\Livewire\Forms\MonthlySalaryForm;
 middleware(['auth']);
 name('human-resource.monthly-salary.input');
 
-state(['employees', 'employee', 'base_salary', 'attendance_insentive', 'split', 'transport', 'is_update']);
+state(['employees', 'employee', 'base_salary', 'attendance_intensive', 'split', 'transport', 'is_update']);
 
 form(MonthlySalaryForm::class);
 
@@ -101,7 +101,7 @@ $set_employee = function ($id){
     $this->employee = Employee::find($id);
     $salary =  $this->employee->currentSalary;
     $this->base_salary = $salary->base_salary;
-    $this->attendance_insentive = $salary->attendance_insentive;
+    $this->attendance_intensive = $salary->attendance_intensive;
     $this->split = $salary->split;
     $this->transport = $salary->transport;
 };
@@ -213,7 +213,7 @@ $count = function (){
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="">Insentive Kehadiran</label>
-                                <input value="Rp. {{ number_format($attendance_insentive) }}" type="text" class="form-control form-control-solid" readonly >
+                                <input value="Rp. {{ number_format($attendance_intensive) }}" type="text" class="form-control form-control-solid" readonly >
                             </div>
                         </div>
                         <div class="col-6">
